@@ -2,7 +2,7 @@
 # Ejercicio Integrador 
 
 Considere el siguiente diagrama de base de datos: 
-![img.png](Images/img.png)
+![img.png](images/img.png)
 
 1) Cree un programa utilizando JDBC que cree el esquema de la base de datos. 
 2) Considere los CSV dados y escriba un programa JDBC que cargue los datos a la base de datos. Considere utilizar la biblioteca Apache Commons CSV, disponible en Maven central, para leer los archivos. 
