@@ -9,5 +9,8 @@
         <module name="IntegradorArqui" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Arquitecturas-Web-Integrador" target="24" />
+    </bytecodeTargetLevel>
   </component>
 </project>
