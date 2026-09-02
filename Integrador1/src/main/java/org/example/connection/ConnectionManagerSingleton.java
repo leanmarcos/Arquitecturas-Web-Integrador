@@ -19,7 +19,7 @@ public class ConnectionManagerSingleton {
     }
 
     //instaciamos la conexion
-    public ConnectionManagerSingleton getInstance(){
+    public static ConnectionManagerSingleton getInstance(){
         if(instance==null){
             instance = new ConnectionManagerSingleton();
         }
