@@ -1,5 +1,10 @@
 package org.example.factory;
 
+import org.example.dao.ClienteDAO;
+import org.example.dao.FacturaDAO;
+import org.example.dao.FacturaProductoDAO;
+import org.example.dao.ProductoDAO;
+
 public abstract class DAOFactory{
 
     private static final int mysql = 1;
@@ -17,5 +22,10 @@ public abstract class DAOFactory{
        }
        return instance;
     }
-    //y aca va los metodos abstractos que deben ser implementados por la fabrica concreta
+    public abstract ClienteDAO getClienteDAO();
+    public abstract FacturaDAO getFacturaDAO();
+    public abstract ProductoDAO getProductoDAO();
+    public abstract FacturaProductoDAO getFacturaProductoDAO();
+
+
 }
