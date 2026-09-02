@@ -1,4 +1,4 @@
-package org.example.impl;
+package org.example.mysql;
 
 import org.example.dao.ProductoDAO;
 import org.example.entity.Producto;
@@ -10,11 +10,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductoDAOImpl implements ProductoDAO {
+public class MySqlProductoDAO implements ProductoDAO {
 
     private final Connection conn;
 
-    public ProductoDAOImpl(Connection conn) {
+    public MySqlProductoDAO(Connection conn) {
         this.conn = conn;
     }
 
