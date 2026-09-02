@@ -12,7 +12,7 @@ public class MySqlDAOFactory extends DAOFactory {
 
     @Override
     public ClienteDAO getClienteDAO() {
-        return MySqlClienteDAO(ConnectionManagerSingleton.getInstance().getConnection())
+        return new MySqlClienteDAO(ConnectionManagerSingleton.getInstance().getConnection());
     }
 
     @Override

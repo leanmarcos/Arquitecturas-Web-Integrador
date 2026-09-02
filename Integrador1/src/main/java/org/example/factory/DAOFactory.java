@@ -14,7 +14,7 @@ public abstract class DAOFactory{
        if (instance==null){
            switch (db){
                case mysql:
-                   // instance = va ala fabrica concreta que es mysqldaofactory
+                   instance = new MySqlDAOFactory();
                    break;
                default:
                    return null;
