@@ -6,6 +6,9 @@ import org.example.dao.FacturaProductoDAO;
 import org.example.dao.ProductoDAO;
 import org.example.connection.ConnectionManagerSingleton;
 import org.example.mysql.MySqlClienteDAO;
+import org.example.mysql.MySqlFacturaDAO;
+import org.example.mysql.MySqlFacturaProductoDAO;
+import org.example.mysql.MySqlProductoDAO;
 
 import java.sql.Connection;
 
@@ -23,16 +26,17 @@ public class MySqlDAOFactory extends DAOFactory {
 
     @Override
     public FacturaDAO getFacturaDAO() {
-        return null;
+        return new MySqlFacturaDAO(conn);
     }
 
     @Override
     public ProductoDAO getProductoDAO() {
-        return null;
+
+        return new MySqlProductoDAO(conn);
     }
 
     @Override
     public FacturaProductoDAO getFacturaProductoDAO() {
-        return null;
+        return new MySqlFacturaProductoDAO(conn);
     }
 }

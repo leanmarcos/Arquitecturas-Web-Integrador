@@ -9,9 +9,11 @@ import java.util.List;
 public class MySqlFacturaDAO implements FacturaDAO {
     private final Connection con;
 
-    public MySqlClienteDAO(Connection con) {
+    public MySqlFacturaDAO(Connection con) {
         this.con = con;
     }
+
+
     public void insertFactura(List<Factura> facturas) {
         // Implementación de la inserción de facturas en la base de datos MySQL
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
