@@ -3,19 +3,19 @@ import java.sql.*;
 
 public class ConnectionManagerSingleton {
 
+    private static final String URL = "jdbc:mysql://localhost:3306/basedatosTP1";
+    private static final String USER = "root";
+    private static final String PASSWORD = "123";
+
     private Connection conn;
     private static ConnectionManagerSingleton instance;
 
     private ConnectionManagerSingleton(){
         try{
-            String url = "jdbc:mysql://localhost:3306/basedatosTP1";
-            String user = "root";
-            String password = "123";
-            conn = DriverManager.getConnection(url, user, password);
+            conn = DriverManager.getConnection(URL, USER, PASSWORD);
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new RuntimeException("No se pudo conectar a la base de datos", e);
         }
-
     }
 
     //instaciamos la conexion
