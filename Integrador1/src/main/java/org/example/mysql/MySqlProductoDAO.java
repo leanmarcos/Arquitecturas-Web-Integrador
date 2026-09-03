@@ -1,14 +1,14 @@
 package org.example.mysql;
 
-import org.example.dao.ProductoDAO;
-import org.example.entity.Producto;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.example.dao.ProductoDAO;
+import org.example.entity.Producto;
 
 public class MySqlProductoDAO implements ProductoDAO {
 
@@ -104,4 +104,19 @@ public class MySqlProductoDAO implements ProductoDAO {
         }
     }
 
+    @Override
+    public void insertBatch(List<Producto> productos) {
+        String sql = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (Producto p : productos) {
+                ps.setInt(1, p.getIdProducto());
+                ps.setString(2, p.getNombre());
+                ps.setFloat(3, p.getValor());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

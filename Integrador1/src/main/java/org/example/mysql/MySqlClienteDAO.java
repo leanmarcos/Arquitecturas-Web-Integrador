@@ -1,9 +1,10 @@
 package org.example.mysql;
 
-import org.example.dao.ClienteDAO;
-import org.example.entity.Cliente;
 import java.sql.Connection;
 import java.util.List;
+
+import org.example.dao.ClienteDAO;
+import org.example.entity.Cliente;
 
 public class MySqlClienteDAO implements ClienteDAO {
     //conecto a la base de datos
@@ -13,7 +14,7 @@ public class MySqlClienteDAO implements ClienteDAO {
         this.con = con;
     }
     @Override
-    public void insertAll(List<Cliente> clientes) {
+    public void insertBatch(List<Cliente> clientes) {
         String sql = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
         try (var pstmt = con.prepareStatement(sql)) {
             for (Cliente cliente : clientes) {

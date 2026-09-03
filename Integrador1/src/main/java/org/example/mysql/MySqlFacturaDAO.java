@@ -1,10 +1,10 @@
 package org.example.mysql;
 
-import org.example.dao.FacturaDAO;
-import org.example.entity.Factura;
-
 import java.sql.Connection;
 import java.util.List;
+
+import org.example.dao.FacturaDAO;
+import org.example.entity.Factura;
 
 public class MySqlFacturaDAO implements FacturaDAO {
     private final Connection con;
@@ -12,9 +12,8 @@ public class MySqlFacturaDAO implements FacturaDAO {
     public MySqlFacturaDAO(Connection con) {
         this.con = con;
     }
-
-
-    public void insertFactura(List<Factura> facturas) {
+    @Override
+    public void insertBatch(List<Factura> facturas) {
         // Implementación de la inserción de facturas en la base de datos MySQL
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
         try (var pstmt = con.prepareStatement(sql)) {
