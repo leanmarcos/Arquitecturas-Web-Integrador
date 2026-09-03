@@ -2,20 +2,21 @@ package org.example.mysql;
 
 import org.example.dao.FacturaDAO;
 import org.example.entity.Factura;
-
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 public class MySqlFacturaDAO implements FacturaDAO {
+
     private final Connection con;
 
     public MySqlFacturaDAO(Connection con) {
         this.con = con;
     }
 
-
-    public void insertFactura(List<Factura> facturas) {
-        // Implementación de la inserción de facturas en la base de datos MySQL
+    @Override
+    public void insertFactura(List<Factura> facturas) { // Se cargan las factura en la DB
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
         try (var pstmt = con.prepareStatement(sql)) {
             for (Factura factura : facturas) {
@@ -30,4 +31,16 @@ public class MySqlFacturaDAO implements FacturaDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void deleteFacturaById(int idFactura) { // Borra una factura por su ID
+        String sql = "DELETE FROM factura WHERE factura.idFactura = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idFactura);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

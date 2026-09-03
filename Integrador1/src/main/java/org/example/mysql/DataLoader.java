@@ -5,7 +5,6 @@ import org.example.entity.Cliente;
 import org.example.entity.Factura;
 import org.example.entity.FacturaProducto;
 import org.example.entity.Producto;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

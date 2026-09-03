@@ -6,12 +6,13 @@ import java.sql.Connection;
 import java.util.List;
 
 public class MySqlClienteDAO implements ClienteDAO {
-    //conecto a la base de datos
+
     private final Connection con;
 
     public MySqlClienteDAO(Connection con) {
         this.con = con;
     }
+
     @Override
     public void insertAll(List<Cliente> clientes) {
         String sql = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
@@ -29,4 +30,5 @@ public class MySqlClienteDAO implements ClienteDAO {
             e.printStackTrace();
         }
     }
+
 }
