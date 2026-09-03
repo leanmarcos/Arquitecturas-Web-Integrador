@@ -6,7 +6,6 @@ public class ConnectionManagerSingleton {
     private static final String URL = "jdbc:mysql://localhost:3306/basedatosTP1";
     private static final String USER = "root";
     private static final String PASSWORD = "123";
-
     private Connection conn;
     private static ConnectionManagerSingleton instance;
 
@@ -18,9 +17,8 @@ public class ConnectionManagerSingleton {
         }
     }
 
-    //instaciamos la conexion
-    public static ConnectionManagerSingleton getInstance(){
-        if(instance==null){
+    public static ConnectionManagerSingleton getInstance() { // Instanciamos la conexion
+        if (instance == null){
             instance = new ConnectionManagerSingleton();
         }
         return instance;

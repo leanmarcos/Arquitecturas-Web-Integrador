@@ -22,10 +22,10 @@ public abstract class DAOFactory{
        }
        return instance;
     }
+
     public abstract ClienteDAO getClienteDAO();
     public abstract FacturaDAO getFacturaDAO();
     public abstract ProductoDAO getProductoDAO();
     public abstract FacturaProductoDAO getFacturaProductoDAO();
-
 
 }
