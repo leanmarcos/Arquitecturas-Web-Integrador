@@ -2,23 +2,22 @@ package org.example.mysql;
 
 import org.example.dao.FacturaDAO;
 import org.example.entity.Factura;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public class MySqlFacturaDAO implements FacturaDAO {
+    private final Connection connection;
 
-    private final Connection con;
-
-    public MySqlFacturaDAO(Connection con) {
-        this.con = con;
+    public MySqlFacturaDAO(Connection connection) {
+        this.connection = connection;
     }
 
-    @Override
-    public void insertFactura(List<Factura> facturas) { // Se cargan las factura en la DB
+
+    public void insertFactura(List<Factura> facturas) {
+        // Implementación de la inserción de facturas en la base de datos MySQL
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
-        try (var pstmt = con.prepareStatement(sql)) {
+        try (var pstmt = connection.prepareStatement(sql)) {
             for (Factura factura : facturas) {
                 pstmt.setInt(1, factura.getIdCliente());
                 pstmt.setInt(2, factura.getIdFactura());
@@ -31,16 +30,4 @@ public class MySqlFacturaDAO implements FacturaDAO {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void deleteFacturaById(int idFactura) { // Borra una factura por su ID
-        String sql = "DELETE FROM factura WHERE factura.idFactura = ?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, idFactura);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }
