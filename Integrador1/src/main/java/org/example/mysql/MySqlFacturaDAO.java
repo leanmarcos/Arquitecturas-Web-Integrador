@@ -1,6 +1,7 @@
 package org.example.mysql;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.example.dao.FacturaDAO;
@@ -12,9 +13,9 @@ public class MySqlFacturaDAO implements FacturaDAO {
     public MySqlFacturaDAO(Connection con) {
         this.con = con;
     }
+
     @Override
-    public void insertBatch(List<Factura> facturas) {
-        // Implementación de la inserción de facturas en la base de datos MySQL
+    public void insertBatch(List<Factura> facturas) throws SQLException {
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
         try (var pstmt = con.prepareStatement(sql)) {
             for (Factura factura : facturas) {
@@ -22,11 +23,9 @@ public class MySqlFacturaDAO implements FacturaDAO {
                 pstmt.setInt(2, factura.getIdFactura());
                 pstmt.addBatch();
             }
+
             pstmt.executeBatch();
             System.out.println("Insertadas " + facturas.size() + " facturas.");
-        } catch (Exception e) {
-            System.err.println("Error al insertar facturas: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }

@@ -105,7 +105,7 @@ public class MySqlProductoDAO implements ProductoDAO {
     }
 
     @Override
-    public void insertBatch(List<Producto> productos) {
+    public void insertBatch(List<Producto> productos) throws SQLException {
         String sql = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             for (Producto p : productos) {
@@ -115,8 +115,7 @@ public class MySqlProductoDAO implements ProductoDAO {
                 ps.addBatch();
             }
             ps.executeBatch();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Insertados " + productos.size() + " productos.");
         }
     }
 }

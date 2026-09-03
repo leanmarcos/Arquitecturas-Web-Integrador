@@ -17,7 +17,7 @@ public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
     }
 
     @Override
-    public void insertBatch(List<FacturaProducto> facturaProducto) {
+    public void insertBatch(List<FacturaProducto> facturaProducto) throws SQLException {
         String sql = "INSERT INTO factura_producto (idFactura, idProducto, cantidad) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             for (FacturaProducto fp : facturaProducto) {
@@ -26,9 +26,9 @@ public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
                 ps.setInt(3, fp.getCantidad());
                 ps.addBatch();
             }
+
             ps.executeBatch();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Insertados " + facturaProducto.size() + " detalles de factura.");
         }
     }
 }

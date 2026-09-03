@@ -1,6 +1,7 @@
 package org.example.mysql;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.example.dao.ClienteDAO;
@@ -14,7 +15,7 @@ public class MySqlClienteDAO implements ClienteDAO {
         this.con = con;
     }
     @Override
-    public void insertBatch(List<Cliente> clientes) {
+    public void insertBatch(List<Cliente> clientes) throws SQLException {
         String sql = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
         try (var pstmt = con.prepareStatement(sql)) {
             for (Cliente cliente : clientes) {
@@ -25,9 +26,6 @@ public class MySqlClienteDAO implements ClienteDAO {
             }
             pstmt.executeBatch();
             System.out.println("Insertados " + clientes.size() + " clientes.");
-        } catch (Exception e) {
-            System.err.println("Error al insertar clientes" + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
