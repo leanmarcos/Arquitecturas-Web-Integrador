@@ -5,6 +5,8 @@ import org.example.entity.Cliente;
 import org.example.entity.Factura;
 import org.example.entity.FacturaProducto;
 import org.example.entity.Producto;
+import org.example.factory.DAOFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,10 +15,13 @@ import java.util.List;
 public class DataLoader {
 
     private final Connection connection;
-    private final CsvImporter csvImporter = new CsvImporter();
+    private final DAOFactory factory;
+    private final CsvImporter csvImporter;
 
-    public DataLoader(Connection connection) {
+    public DataLoader(Connection connection, DAOFactory factory, CsvImporter csvImporter) {
         this.connection = connection;
+        this.factory = factory;
+        this.csvImporter = csvImporter;
     }
 
     public void loadAllData() throws SQLException {

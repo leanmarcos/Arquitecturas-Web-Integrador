@@ -16,8 +16,8 @@ public class MySqlDAOFactory extends DAOFactory {
 
     private Connection conn;
 
-    public MySqlDAOFactory() {
-        this.conn = ConnectionManagerSingleton.getInstance().getConnection();
+    public MySqlDAOFactory(Connection conn) {
+        this.conn = conn;
     }
     @Override
     public ClienteDAO getClienteDAO() {
