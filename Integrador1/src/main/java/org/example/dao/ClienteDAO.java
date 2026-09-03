@@ -1,10 +1,9 @@
 package org.example.dao;
 
-import org.example.entity.Cliente;
-
 import java.util.List;
 
-public interface ClienteDAO {
-    void insertAll(List<Cliente> clientes);
+import org.example.entity.Cliente;
 
+public interface ClienteDAO {
+    void insertBatch(List<Cliente> clientes);
 }

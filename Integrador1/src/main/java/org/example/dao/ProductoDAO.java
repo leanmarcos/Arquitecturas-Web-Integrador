@@ -1,8 +1,8 @@
 package org.example.dao;
 
-import org.example.entity.Producto;
-
 import java.util.List;
+
+import org.example.entity.Producto;
 
 public interface ProductoDAO {
     void insert(String name, Float price);
@@ -10,4 +10,5 @@ public interface ProductoDAO {
     void delete(int id);
     Producto select(int id);
     List<Producto> getAll();
+    void insertBatch(List<Producto> productos);
 }
