@@ -1,12 +1,11 @@
 package org.example.mysql;
 
+import org.example.dao.FacturaProductoDAO;
+import org.example.entity.FacturaProducto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
-import org.example.dao.FacturaProductoDAO;
-import org.example.entity.FacturaProducto;
 
 public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
     private final Connection con;
@@ -17,7 +16,7 @@ public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
     }
 
     @Override
-    public void insertBatch(List<FacturaProducto> facturaProducto) throws SQLException {
+    public void insertAll(List<FacturaProducto> facturaProducto) {
         String sql = "INSERT INTO factura_producto (idFactura, idProducto, cantidad) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             for (FacturaProducto fp : facturaProducto) {
@@ -26,9 +25,9 @@ public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
                 ps.setInt(3, fp.getCantidad());
                 ps.addBatch();
             }
-
             ps.executeBatch();
-            System.out.println("Insertados " + facturaProducto.size() + " detalles de factura.");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al insertar detalles de factura", e);
         }
     }
 }
