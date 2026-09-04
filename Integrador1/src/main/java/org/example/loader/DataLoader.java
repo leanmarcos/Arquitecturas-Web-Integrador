@@ -15,6 +15,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Coordina el proceso completo de carga de datos desde los archivos CSV hacia la base de datos.
+ *
+ */
 public class DataLoader {
 
     private final Connection connection;
@@ -60,6 +64,11 @@ public class DataLoader {
         }
     }
 
+    /**
+     * Gestiona la carga de clientes
+     * @return
+     * @throws SQLException
+     */
     private int loadClientes() throws SQLException {
         List<Cliente> clientes = csvImporter.importar("/data/clientes.csv",
                 row -> new Cliente(Integer.parseInt(row.get("idCliente")), row.get("nombre"), row.get("email")));
@@ -68,6 +77,11 @@ public class DataLoader {
         return clientes.size();
     }
 
+    /**
+     * Gestiona la carga de productos
+     * @return
+     * @throws SQLException
+     */
     private int loadProductos() throws SQLException {
         List<Producto> productos = csvImporter.importar("/data/productos.csv",
                 row -> new Producto(Integer.parseInt(row.get("idProducto")), row.get("nombre"), Float.parseFloat(row.get("valor"))));
@@ -76,6 +90,11 @@ public class DataLoader {
         return productos.size();
     }
 
+    /**
+     * Gestiona la carga de facturas
+     * @return
+     * @throws SQLException
+     */
     private int loadFacturas() throws SQLException {
         List<Factura> facturas = csvImporter.importar("/data/facturas.csv",
                 row -> new Factura(Integer.parseInt(row.get("idFactura")), Integer.parseInt(row.get("idCliente"))));
@@ -84,6 +103,11 @@ public class DataLoader {
         return facturas.size();
     }
 
+    /**
+     * Gestiona la carga de facturasProductos
+     * @return
+     * @throws SQLException
+     */
     private int loadFacturasProductos() throws SQLException {
         List<FacturaProducto> detalles = csvImporter.importar("/data/facturas-productos.csv",
                 row -> new FacturaProducto(Integer.parseInt(row.get("idFactura")), Integer.parseInt(row.get("idProducto")), Integer.parseInt(row.get("cantidad"))));

@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Implementa FacturaDAO y contiene las operaciones SQL necesarias para gestionar las facturas almacenadas en MySQL.
+ */
 public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
     private final Connection con;
 
