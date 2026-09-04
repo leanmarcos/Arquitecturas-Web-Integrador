@@ -4,6 +4,7 @@ import org.example.dao.FacturaDAO;
 import org.example.entity.Factura;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class MySqlFacturaDAO implements FacturaDAO {
@@ -13,7 +14,7 @@ public class MySqlFacturaDAO implements FacturaDAO {
         this.connection = connection;
     }
 
-
+    @Override
     public void insertFactura(List<Factura> facturas) {
         // Implementación de la inserción de facturas en la base de datos MySQL
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
@@ -32,6 +33,13 @@ public class MySqlFacturaDAO implements FacturaDAO {
     }
 
     @Override
-    public void deleteFacturaById(int idFactura) {
+    public void deleteFacturaById(int id){
+        String query = "DELETE FROM  factura WHERE idFactura = ?";
+        try(PreparedStatement ps = connection.prepareStatement(query)){
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
