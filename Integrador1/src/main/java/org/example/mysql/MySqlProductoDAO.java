@@ -19,14 +19,18 @@ public class MySqlProductoDAO implements ProductoDAO {
     }
 
     @Override
-    public void insert(String name, Float price){
-        String query = "INSERT INTO producto (nombre,precio) VALUES (?,?)";
-        try(PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setString(1, name);
-            stmt.setFloat(2, price);
-            stmt.execute();
-        } catch(Exception e){
-            e.printStackTrace();
+    public void insertAll(List<Producto> productos) {
+        String query = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            for (Producto producto : productos) {
+                stmt.setInt(1, producto.getIdProducto());
+                stmt.setString(2, producto.getNombre());
+                stmt.setFloat(3, producto.getValor());
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al insertar productos", e);
         }
     }
 

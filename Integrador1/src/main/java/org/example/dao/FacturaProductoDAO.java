@@ -1,10 +1,11 @@
 package org.example.dao;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.example.entity.FacturaProducto;
 
+import java.util.List;
+
 public interface FacturaProductoDAO {
-    void insertBatch(List<FacturaProducto> facturaProducto) throws SQLException;
+
+    void insertAll(List<FacturaProducto> facturaProducto);
+
 }

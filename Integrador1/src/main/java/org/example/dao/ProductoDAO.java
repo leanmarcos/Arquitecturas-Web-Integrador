@@ -7,7 +7,7 @@ import org.example.entity.Producto;
 
 public interface ProductoDAO {
 
-    void insert(String name, Float price);
+    void insertAll(List<Producto> productos);
     void update(String name, Float price);
     void delete(int id);
     Producto select(int id);

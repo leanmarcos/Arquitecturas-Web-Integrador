@@ -1,12 +1,12 @@
 package org.example.mysql;
 
+import org.example.dao.FacturaDAO;
+import org.example.entity.Factura;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-
-import org.example.dao.FacturaDAO;
-import org.example.entity.Factura;
 
 public class MySqlFacturaDAO implements FacturaDAO {
     private final Connection connection;
@@ -16,7 +16,7 @@ public class MySqlFacturaDAO implements FacturaDAO {
     }
 
     @Override
-    public void insertBatch(List<Factura> facturas) throws SQLException {
+    public void insertAll(List<Factura> facturas){
         String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
         try (var pstmt = connection.prepareStatement(sql)) {
             for (Factura factura : facturas) {
@@ -26,19 +26,19 @@ public class MySqlFacturaDAO implements FacturaDAO {
             }
 
             pstmt.executeBatch();
-            System.out.println("Insertadas " + facturas.size() + " facturas.");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al insertar facturas", e);
         }
     }
 
     @Override
-    @SuppressWarnings("CallToPrintStackTrace")
     public void deleteFacturaById(int id){
         String query = "DELETE FROM  factura WHERE idFactura = ?";
         try(PreparedStatement ps = connection.prepareStatement(query)){
             ps.setInt(1, id);
             ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al eliminar factura con id " + id, e);
         }
     }
 }
