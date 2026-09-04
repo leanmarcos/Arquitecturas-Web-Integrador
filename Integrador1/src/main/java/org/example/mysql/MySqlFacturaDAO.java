@@ -31,6 +31,7 @@ public class MySqlFacturaDAO implements FacturaDAO {
     }
 
     @Override
+    @SuppressWarnings("CallToPrintStackTrace")
     public void deleteFacturaById(int id){
         String query = "DELETE FROM  factura WHERE idFactura = ?";
         try(PreparedStatement ps = connection.prepareStatement(query)){

@@ -57,7 +57,7 @@ public class DataLoader {
             )
         );
 
-        clienteDAO.insertBatch(clientes);
+        factory.getClienteDAO().insertBatch(clientes);
         return clientes.size();
     }
     
@@ -71,7 +71,7 @@ public class DataLoader {
             )
         );
 
-        productoDAO.insertBatch(productos);
+        factory.getProductoDAO().insertBatch(productos);
         return productos.size();
     }
 
@@ -84,7 +84,7 @@ public class DataLoader {
             )
         );
 
-        facturaDAO.insertBatch(facturas);
+        factory.getFacturaDAO().insertBatch(facturas);
         return facturas.size();
 
     }
@@ -99,7 +99,7 @@ public class DataLoader {
             )
         );
 
-        facturaProductoDAO.insertBatch(facturasProductos);
+        factory.getFacturaProductoDAO().insertBatch(facturasProductos);
         return facturasProductos.size();
     }
 }

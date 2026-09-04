@@ -6,5 +6,5 @@ import java.util.List;
 import org.example.entity.FacturaProducto;
 
 public interface FacturaProductoDAO {
-    void insertBatch(List<FacturaProducto> detalles) throws SQLException;
+    void insertBatch(List<FacturaProducto> facturaProducto) throws SQLException;
 }
