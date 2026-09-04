@@ -3,9 +3,9 @@ import java.sql.*;
 
 public class ConnectionManagerSingleton {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/basedatosTP1";
-    private static final String USER = "root";
-    private static final String PASSWORD = "123";
+    private static final String URL = "jdbc:mysql://localhost:3306/db_integrador_tp1";
+    private static final String USER = "app_user";
+    private static final String PASSWORD = "12345";
     private Connection conn;
     private static ConnectionManagerSingleton instance;
 

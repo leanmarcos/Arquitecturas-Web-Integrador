@@ -4,6 +4,7 @@ import org.example.dao.ClienteDAO;
 import org.example.dao.FacturaDAO;
 import org.example.dao.FacturaProductoDAO;
 import org.example.dao.ProductoDAO;
+import org.example.dao.SchemaDAO;
 
 import java.sql.Connection;
 
@@ -22,4 +23,5 @@ public abstract class DAOFactory{
     public abstract FacturaDAO getFacturaDAO();
     public abstract ProductoDAO getProductoDAO();
     public abstract FacturaProductoDAO getFacturaProductoDAO();
+    public abstract SchemaDAO getSchemaDAO();
 }
