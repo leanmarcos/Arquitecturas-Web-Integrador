@@ -30,4 +30,8 @@ public class MySqlFacturaDAO implements FacturaDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void deleteFacturaById(int idFactura) {
+    }
 }
