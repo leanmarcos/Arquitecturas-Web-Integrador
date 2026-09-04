@@ -6,6 +6,9 @@ import java.sql.Statement;
 
 import org.example.dao.SchemaDAO;
 
+/**
+ * Implementa SchemaDAO y contiene las operaciones necesarias para crear y eliminar las tablas del esquema de MySQL.
+ */
 public class MySQLSchemaDAO implements SchemaDAO {
 
     private final Connection connection;

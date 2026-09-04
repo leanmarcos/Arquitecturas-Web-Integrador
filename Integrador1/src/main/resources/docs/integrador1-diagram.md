@@ -1,6 +1,6 @@
 # Código mermaid original
 
-![`src/main/resources/docs/integrador1-diagram.png`](src/main/resources/docs/integrador1-diagram.png)
+![`src/main/resources/docs/integrador1-diagram.png`](src/main/resources/docs/integrador1.diagram.png)
 
 flowchart TD
 

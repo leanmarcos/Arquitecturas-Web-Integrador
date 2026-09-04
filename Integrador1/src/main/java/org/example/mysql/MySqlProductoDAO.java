@@ -10,6 +10,9 @@ import java.util.List;
 import org.example.dao.ProductoDAO;
 import org.example.entity.Producto;
 
+/**
+ * Implementa FacturaProductoDAO y contiene las operaciones SQL necesarias para gestionar las relaciones entre facturas y productos.
+ */
 public class MySqlProductoDAO implements ProductoDAO {
 
     private final Connection conn;

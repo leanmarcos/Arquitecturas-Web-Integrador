@@ -5,6 +5,10 @@ import org.example.entity.Cliente;
 import java.sql.Connection;
 import java.util.List;
 
+/**
+ * Implementa ClienteDAO y contiene las operaciones SQL necesarias para gestionar los clientes almacenados en MySQL.
+ *
+ */
 public class MySqlClienteDAO implements ClienteDAO {
 
     private final Connection con;
