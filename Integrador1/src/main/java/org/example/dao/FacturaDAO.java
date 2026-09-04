@@ -1,12 +1,11 @@
 package org.example.dao;
+import java.sql.SQLException;
+import java.util.List;
 
 import org.example.entity.Factura;
 
-import java.util.List;
-
 public interface FacturaDAO {
-
-    void insertFactura(List<Factura> facturas);
+    void insertBatch(List<Factura> facturas) throws SQLException;
     void deleteFacturaById(int idFactura);
 
 }
