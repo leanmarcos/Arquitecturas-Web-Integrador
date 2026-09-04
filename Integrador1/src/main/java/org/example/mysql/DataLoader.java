@@ -9,24 +9,19 @@ import org.example.entity.Cliente;
 import org.example.entity.Factura;
 import org.example.entity.FacturaProducto;
 import org.example.entity.Producto;
+import org.example.factory.DAOFactory;
 
 
 public class DataLoader {
 
     private final Connection connection;
-    private final CsvImporter csvImporter = new CsvImporter();
-    
-    private final MySqlClienteDAO clienteDAO;
-    private final MySqlProductoDAO productoDAO;
-    private final MySqlFacturaDAO facturaDAO;
-    private final MySqlFacturaProductoDAO facturaProductoDAO;
+    private final DAOFactory factory;
+    private final CsvImporter csvImporter;
 
-    public DataLoader(Connection connection) {
+    public DataLoader(Connection connection, DAOFactory factory, CsvImporter csvImporter) {
         this.connection = connection;
-        clienteDAO = new MySqlClienteDAO(connection);
-        productoDAO = new MySqlProductoDAO(connection);
-        facturaDAO = new MySqlFacturaDAO(connection);
-        facturaProductoDAO = new MySqlFacturaProductoDAO(connection);
+        this.factory = factory;
+        this.csvImporter = csvImporter;
     }
 
     public void loadAllData() throws SQLException {

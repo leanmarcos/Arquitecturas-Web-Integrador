@@ -4,11 +4,13 @@ import org.example.dao.ClienteDAO;
 import org.example.dao.FacturaDAO;
 import org.example.dao.FacturaProductoDAO;
 import org.example.dao.ProductoDAO;
+import org.example.dao.SchemaDAO;
 import org.example.connection.ConnectionManagerSingleton;
 import org.example.mysql.MySqlClienteDAO;
 import org.example.mysql.MySqlFacturaDAO;
 import org.example.mysql.MySqlFacturaProductoDAO;
 import org.example.mysql.MySqlProductoDAO;
+import org.example.mysql.MySQLSchemaDAO;
 
 import java.sql.Connection;
 
@@ -16,8 +18,8 @@ public class MySqlDAOFactory extends DAOFactory {
 
     private Connection conn;
 
-    public MySqlDAOFactory() {
-        this.conn = ConnectionManagerSingleton.getInstance().getConnection();
+    public MySqlDAOFactory(Connection conn) {
+        this.conn = conn;
     }
     @Override
     public ClienteDAO getClienteDAO() {
@@ -38,5 +40,10 @@ public class MySqlDAOFactory extends DAOFactory {
     @Override
     public FacturaProductoDAO getFacturaProductoDAO() {
         return new MySqlFacturaProductoDAO(conn);
+    }
+
+    @Override
+    public SchemaDAO getSchemaDAO() {
+        return new MySQLSchemaDAO(conn);
     }
 }

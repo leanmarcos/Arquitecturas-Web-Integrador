@@ -8,12 +8,13 @@ import org.example.dao.ClienteDAO;
 import org.example.entity.Cliente;
 
 public class MySqlClienteDAO implements ClienteDAO {
-    //conecto a la base de datos
+
     private final Connection con;
 
     public MySqlClienteDAO(Connection con) {
         this.con = con;
     }
+
     @Override
     public void insertBatch(List<Cliente> clientes) throws SQLException {
         String sql = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
@@ -28,4 +29,5 @@ public class MySqlClienteDAO implements ClienteDAO {
             System.out.println("Insertados " + clientes.size() + " clientes.");
         }
     }
+
 }
