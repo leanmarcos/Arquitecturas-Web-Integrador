@@ -28,6 +28,11 @@ public class MySqlDAOFactory extends DAOFactory {
     public MySqlDAOFactory(Connection conn) {
         this.conn = conn;
     }
+
+    /**
+     * Devuelve el DAO de Cliente
+     * @return
+     */
     @Override
     public ClienteDAO getClienteDAO() {
         return new MySqlClienteDAO(conn);
