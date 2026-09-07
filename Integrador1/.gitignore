@@ -13,6 +13,11 @@ target/
 *.iml
 *.ipr
 
+# JetBrains database configurations
+.idea/dataSources/
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -40,3 +45,4 @@ build/
 
 ### Docs internas ###
 RFC-*
+
