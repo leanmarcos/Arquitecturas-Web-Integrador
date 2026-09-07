@@ -19,15 +19,18 @@ public class MySqlClienteDAO implements ClienteDAO {
 
     @Override
     public void insertAll(List<Cliente> clientes) {
-        String sql = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
-        try (var pstmt = con.prepareStatement(sql)) {
+
+        String query = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
+
+        try (var stmt = con.prepareStatement(query)) {
             for (Cliente cliente : clientes) {
-                pstmt.setInt(1, cliente.getIdCliente());
-                pstmt.setString(2, cliente.getNombre());
-                pstmt.setString(3, cliente.getEmail());
-                pstmt.addBatch();
+                stmt.setInt(1, cliente.getIdCliente());
+                stmt.setString(2, cliente.getNombre());
+                stmt.setString(3, cliente.getEmail());
+                stmt.addBatch();
             }
-            pstmt.executeBatch();
+            stmt.executeBatch();
+
         } catch (Exception e) {
             throw new RuntimeException("Error al insertar clientes" ,e);
         }

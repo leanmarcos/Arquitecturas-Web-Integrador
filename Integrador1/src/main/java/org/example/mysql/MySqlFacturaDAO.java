@@ -11,7 +11,9 @@ import java.util.List;
 /**
  * Implementa ProductoDAO y contiene las operaciones SQL necesarias para gestionar los productos almacenados en MySQL.
  */
+
 public class MySqlFacturaDAO implements FacturaDAO {
+
     private final Connection connection;
 
     public MySqlFacturaDAO(Connection connection) {
@@ -20,15 +22,16 @@ public class MySqlFacturaDAO implements FacturaDAO {
 
     @Override
     public void insertAll(List<Factura> facturas){
-        String sql = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
-        try (var pstmt = connection.prepareStatement(sql)) {
-            for (Factura factura : facturas) {
-                pstmt.setInt(1, factura.getIdCliente());
-                pstmt.setInt(2, factura.getIdFactura());
-                pstmt.addBatch();
-            }
+        String query = "INSERT INTO factura(idCliente, idFactura) VALUES (?, ?)";
 
-            pstmt.executeBatch();
+        try (var stmt = connection.prepareStatement(query)) {
+            for (Factura factura : facturas) {
+                stmt.setInt(1, factura.getIdCliente());
+                stmt.setInt(2, factura.getIdFactura());
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar facturas", e);
         }
@@ -36,10 +39,12 @@ public class MySqlFacturaDAO implements FacturaDAO {
 
     @Override
     public void deleteFacturaById(int id){
-        String query = "DELETE FROM  factura WHERE idFactura = ?";
-        try(PreparedStatement ps = connection.prepareStatement(query)){
-            ps.setInt(1, id);
-            ps.executeUpdate();
+        String query = "DELETE FROM factura WHERE idFactura = ?";
+
+        try(PreparedStatement stmt = connection.prepareStatement(query)){
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException("Error al eliminar factura con id " + id, e);
         }

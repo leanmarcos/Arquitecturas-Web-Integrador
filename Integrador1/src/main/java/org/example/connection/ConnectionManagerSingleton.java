@@ -4,7 +4,8 @@ import java.sql.*;
 /**
  * Responsabilidad: administrar la conexión con la base de datos.
  *
- * Esta clase centraliza los datos necesarios para conectarse a MySQL (URL, usuario y contraseña) y establece la conexión mediante JDBC. Implementa el patrón Singleton, garantizando que exista una única instancia del administrador de conexión durante la ejecución de la aplicación.
+ * Esta clase centraliza los datos necesarios para conectarse a MySQL (URL, usuario y contraseña) y establece la conexión mediante JDBC.
+ * Implementa el patrón Singleton, garantizando que exista una única instancia del administrador de conexión durante la ejecución de la aplicación.
  *
  * Proporciona la conexión activa a las clases que necesitan realizar operaciones sobre la base de datos y también permite cerrarla de forma controlada.
  */
@@ -59,7 +60,7 @@ public class ConnectionManagerSingleton {
                     System.out.println("Conexión a la base de datos cerrada.");
                 }
             } catch (SQLException e) {
-                System.err.println("Error al cerra la base de datos: " + e.getMessage());
+                System.err.println("Error al cerrar la base de datos: " + e.getMessage());
                 e.printStackTrace();
             }
         }

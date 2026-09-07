@@ -10,25 +10,28 @@ import java.util.List;
 /**
  * Implementa FacturaDAO y contiene las operaciones SQL necesarias para gestionar las facturas almacenadas en MySQL.
  */
+
 public class MySqlFacturaProductoDAO implements FacturaProductoDAO {
+
     private final Connection con;
 
     public MySqlFacturaProductoDAO(Connection con) {
         this.con = con;
-
     }
 
     @Override
     public void insertAll(List<FacturaProducto> facturaProducto) {
-        String sql = "INSERT INTO factura_producto (idFactura, idProducto, cantidad) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+        String query = "INSERT INTO factura_producto (idFactura, idProducto, cantidad) VALUES (?, ?, ?)";
+
+        try (PreparedStatement stmt = con.prepareStatement(query)) {
             for (FacturaProducto fp : facturaProducto) {
-                ps.setInt(1, fp.getIdFactura());
-                ps.setInt(2, fp.getIdProducto());
-                ps.setInt(3, fp.getCantidad());
-                ps.addBatch();
+                stmt.setInt(1, fp.getIdFactura());
+                stmt.setInt(2, fp.getIdProducto());
+                stmt.setInt(3, fp.getCantidad());
+                stmt.addBatch();
             }
-            ps.executeBatch();
+            stmt.executeBatch();
+
         } catch (SQLException e) {
             throw new RuntimeException("Error al insertar detalles de factura", e);
         }
