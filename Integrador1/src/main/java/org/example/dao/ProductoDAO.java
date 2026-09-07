@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.example.dto.ProductoRecaudadoDTO;
 import org.example.entity.Producto;
 
 public interface ProductoDAO {
@@ -53,6 +54,6 @@ public interface ProductoDAO {
      *
      * @return el producto con mayor recaudación, o {@code null} si no hay ventas cargadas
      */
-    Producto getProductoMayorRecaudacion();
+    ProductoRecaudadoDTO getProductoMayorRecaudacion();
 
 }

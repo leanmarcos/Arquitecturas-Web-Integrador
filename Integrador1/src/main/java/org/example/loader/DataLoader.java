@@ -45,7 +45,7 @@ public class DataLoader {
     public DataResult loadAllData() throws SQLException {
         DataResult resultado = new DataResult();
         boolean previousAutoCommit = connection.getAutoCommit(); //por default en true
-        connection.setAutoCommit(false); //empieza la transaccion
+        connection.setAutoCommit(false); //empieza la transaction
 
         try {
             resultado.setClientes(loadClientes());

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.example.dao.ProductoDAO;
+import org.example.dto.ProductoRecaudadoDTO;
 import org.example.entity.Producto;
 
 /**
@@ -147,7 +148,7 @@ public class MySqlProductoDAO implements ProductoDAO {
      *         si no hay ventas cargadas (tabla {@code factura_producto} vacía)
      */
     @Override
-    public Producto getProductoMayorRecaudacion() {
+    public ProductoRecaudadoDTO getProductoMayorRecaudacion() {
         String query = "SELECT p.idProducto, p.nombre, p.valor, " +
                         "SUM(fp.cantidad * p.valor) AS recaudacion " +
                         "FROM producto p " +
@@ -159,10 +160,11 @@ public class MySqlProductoDAO implements ProductoDAO {
         try (PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
-                return new Producto(
+                return new ProductoRecaudadoDTO(
                         rs.getInt("idProducto"),
                         rs.getString("nombre"),
-                        rs.getFloat("valor")
+                        rs.getFloat("valor"),
+                        rs.getFloat("recaudacion")
                 );
             }
             return null;

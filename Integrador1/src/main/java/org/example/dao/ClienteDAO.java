@@ -3,6 +3,7 @@ package org.example.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.example.dto.ClienteFacturadoDTO;
 import org.example.entity.Cliente;
 
 /**
@@ -15,6 +16,8 @@ public interface ClienteDAO {
      * @param clientes
      * @throws SQLException
      */
-
     void insertAll(List<Cliente> clientes) throws SQLException;
+
+
+    List<ClienteFacturadoDTO> getClientsOrderedByBilling();
 }

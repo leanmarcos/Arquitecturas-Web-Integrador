@@ -1,8 +1,13 @@
 package org.example.mysql;
 
 import org.example.dao.ClienteDAO;
+import org.example.dto.ClienteFacturadoDTO;
 import org.example.entity.Cliente;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,10 +16,10 @@ import java.util.List;
  */
 public class MySqlClienteDAO implements ClienteDAO {
 
-    private final Connection con;
+    private final Connection connection;
 
-    public MySqlClienteDAO(Connection con) {
-        this.con = con;
+    public MySqlClienteDAO(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
@@ -22,7 +27,7 @@ public class MySqlClienteDAO implements ClienteDAO {
 
         String query = "INSERT INTO cliente (idCliente, nombre, email) VALUES (?, ?, ?)";
 
-        try (var stmt = con.prepareStatement(query)) {
+        try (var stmt = connection.prepareStatement(query)) {
             for (Cliente cliente : clientes) {
                 stmt.setInt(1, cliente.getIdCliente());
                 stmt.setString(2, cliente.getNombre());
@@ -34,6 +39,35 @@ public class MySqlClienteDAO implements ClienteDAO {
         } catch (Exception e) {
             throw new RuntimeException("Error al insertar clientes" ,e);
         }
+    }
+
+    @Override
+    public List<ClienteFacturadoDTO> getClientsOrderedByBilling() {
+        String query = "SELECT c.idCliente, c.nombre, c.email, " +
+                        "SUM(fp.cantidad * p.valor) AS gastoTotal " +
+                        "FROM cliente c " +
+                        "JOIN factura f ON f.idCliente = c.idCliente " +
+                        "JOIN factura_producto fp ON fp.idFactura = f.idFactura " +
+                        "JOIN producto p ON fp.idProducto = p.idProducto " +
+                        "GROUP BY c.idCliente, c.nombre, c.email " +
+                        "ORDER BY gastoTotal DESC, c.idCliente ASC ";
+
+            List<ClienteFacturadoDTO> clients = new ArrayList<>();
+            try (PreparedStatement stmt = connection.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ClienteFacturadoDTO cl = new ClienteFacturadoDTO(
+                            rs.getInt("idCliente"),
+                            rs.getString("nombre"),
+                            rs.getString("email"),
+                            rs.getFloat("gastoTotal")
+                    );
+                    clients.add(cl);
+                }
+                return clients;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
     }
 
 }
