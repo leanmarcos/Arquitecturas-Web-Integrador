@@ -4,11 +4,14 @@ import lombok.*;
 /**
  * Representa la relación entre una factura y los productos que la componen, incluyendo la información necesaria para modelar dicha asociación.
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+
+@Getter // Getters
+@Setter // Setters
+@AllArgsConstructor // Constructor con todos los campos
+@ToString // ToString
+
 public class FacturaProducto {
+
     private int idFactura;
     private int idProducto;
     private int cantidad;

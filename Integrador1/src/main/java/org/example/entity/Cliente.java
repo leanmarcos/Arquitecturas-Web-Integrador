@@ -4,10 +4,13 @@ import lombok.*;
 /**
  * Representa un cliente del sistema y contiene los atributos necesarios para modelar la información de un registro de cliente.
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+
+@Getter // Getters
+@Setter // Setters
+@NoArgsConstructor // Constructor vacío
+@AllArgsConstructor // Constructor con todos los campos
+@ToString // ToString
+
 public class Cliente {
 
     private int idCliente;

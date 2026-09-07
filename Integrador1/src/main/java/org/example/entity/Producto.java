@@ -4,10 +4,13 @@ import lombok.*;
 /**
  * Representa un producto y contiene la información asociada a cada registro de producto.
  */
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
+
+@Getter // Getters
+@Setter // Setters
+@NoArgsConstructor // Constructor vacío
+@AllArgsConstructor // Constructor con todos los campos
+@ToString // ToString
+
 public class Producto {
 
     private int idProducto;

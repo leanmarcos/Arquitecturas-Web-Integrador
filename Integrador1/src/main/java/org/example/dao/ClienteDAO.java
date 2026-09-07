@@ -15,5 +15,6 @@ public interface ClienteDAO {
      * @param clientes
      * @throws SQLException
      */
+
     void insertAll(List<Cliente> clientes) throws SQLException;
 }

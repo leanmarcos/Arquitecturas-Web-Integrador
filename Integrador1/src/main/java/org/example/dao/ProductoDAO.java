@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ProductoDAO {
      * @param name
      * @param price
      */
-    void update(String name, Float price);
+    void update(int id, String name, Float price);
 
     /**
      * Recibe un id por parámetros y elimina el registro con ese id
@@ -40,5 +41,18 @@ public interface ProductoDAO {
     List<Producto> getAll();
 
     void insertBatch(List<Producto> productos) throws SQLException;
+
+    /**
+     * Obtiene el producto con mayor recaudación total, entendiendo
+     * recaudación como la suma de (cantidad vendida x valor) sobre
+     * todas sus líneas de factura.
+     * <p>
+     * En caso de empate, el criterio de desempate queda a criterio
+     * de la implementación, pero debe ser determinístico (documentado
+     * en la clase concreta).
+     *
+     * @return el producto con mayor recaudación, o {@code null} si no hay ventas cargadas
+     */
+    Producto getProductoMayorRecaudacion();
 
 }
