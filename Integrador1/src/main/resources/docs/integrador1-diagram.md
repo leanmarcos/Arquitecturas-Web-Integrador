@@ -48,7 +48,7 @@ flowchart TD
     %% =====================================================
 
     subgraph LOADER["loader/"]
-        DATA_LOADER["DataLoader<br/><br/>Carga CSVs<br/>Crea Entities<br/>Obtiene DAOs<br/>Ejecuta insertBatch()"]
+        DATA_LOADER["DataLoader<br/><br/>Carga CSVs<br/>Crea Entities<br/>Obtiene DAOs<br/>Ejecuta insertAll()"]
         DATA_RESULT["DataResult<br/><br/>Formato del resultado"]
     end
 
@@ -101,10 +101,10 @@ flowchart TD
     %% =====================================================
 
     subgraph DAO["dao/"]
-        CLIENTE_DAO["ClienteDAO<br/><br/>CRUD<br/>insertBatch()"]
-        PRODUCTO_DAO["ProductoDAO<br/><br/>CRUD<br/>insertBatch()"]
-        FACTURA_DAO["FacturaDAO<br/><br/>CRUD<br/>insertBatch()"]
-        FACTURA_PRODUCTO_DAO["FacturaProductoDAO<br/><br/>CRUD<br/>insertBatch()"]
+        CLIENTE_DAO["ClienteDAO<br/><br/>CRUD<br/>insertAll()"]
+        PRODUCTO_DAO["ProductoDAO<br/><br/>CRUD<br/>insertAll()"]
+        FACTURA_DAO["FacturaDAO<br/><br/>CRUD<br/>insertAll()"]
+        FACTURA_PRODUCTO_DAO["FacturaProductoDAO<br/><br/>CRUD<br/>insertAll()"]
         SCHEMA_DAO["SchemaDAO<br/><br/>createTable()<br/>dropTable()"]
     end
 
@@ -118,7 +118,7 @@ flowchart TD
         MYSQL_PRODUCTO["MySqlProductoDAO"]
         MYSQL_FACTURA["MySqlFacturaDAO"]
         MYSQL_FACTURA_PRODUCTO["MySqlFacturaProductoDAO"]
-        MYSQL_SCHEMA["MySqlSchemaDAO"]
+        MYSQL_SCHEMA["MySQLSchemaDAO"]
     end
 
 
@@ -139,10 +139,10 @@ flowchart TD
 
 
     %% DataLoader uses DAOs
-    DATA_LOADER -->|"insertBatch()"| CLIENTE_DAO
-    DATA_LOADER -->|"insertBatch()"| PRODUCTO_DAO
-    DATA_LOADER -->|"insertBatch()"| FACTURA_DAO
-    DATA_LOADER -->|"insertBatch()"| FACTURA_PRODUCTO_DAO
+    DATA_LOADER -->|"insertAll()"| CLIENTE_DAO
+    DATA_LOADER -->|"insertAll()"| PRODUCTO_DAO
+    DATA_LOADER -->|"insertAll()"| FACTURA_DAO
+    DATA_LOADER -->|"insertAll()"| FACTURA_PRODUCTO_DAO
 
 
     %% =====================================================

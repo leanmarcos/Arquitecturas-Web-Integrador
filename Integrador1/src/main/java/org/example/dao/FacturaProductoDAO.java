@@ -10,8 +10,9 @@ import java.util.List;
 public interface FacturaProductoDAO {
 
     /**
-     * Define función para agregar varios registros a la vez
-     * @param facturaProducto
+     * Inserta varias relaciones factura-producto en un solo lote.
+     *
+     * @param facturaProducto lista de relaciones factura-producto a insertar
      */
     void insertAll(List<FacturaProducto> facturaProducto);
 

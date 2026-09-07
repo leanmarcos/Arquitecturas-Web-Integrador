@@ -7,6 +7,7 @@ import lombok.*;
 
 @Getter // Getters
 @Setter // Setters
+@NoArgsConstructor // Constructor vacío
 @AllArgsConstructor // Constructor con todos los campos
 @ToString // ToString
 

@@ -10,14 +10,16 @@ import java.util.List;
 public interface FacturaDAO {
 
     /**
-     * Define función para agregar varios registros a la vez
-     * @param facturas
+     * Inserta varias facturas en un solo lote.
+     *
+     * @param facturas lista de facturas a insertar
      */
     void insertAll(List<Factura> facturas);
 
     /**
-     * Recibe un id por parámetros y elimina el registro con ese id
-     * @param idFactura
+     * Elimina la factura con el id indicado.
+     *
+     * @param idFactura id de la factura a eliminar
      */
     void deleteFacturaById(int idFactura);
 

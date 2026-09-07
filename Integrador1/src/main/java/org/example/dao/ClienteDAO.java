@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.example.dto.ClienteFacturadoDTO;
@@ -12,12 +11,16 @@ import org.example.entity.Cliente;
 public interface ClienteDAO {
 
     /**
-     * Define función para agregar varios registros a la vez
-     * @param clientes
-     * @throws SQLException
+     * Inserta varios clientes en un solo lote.
+     *
+     * @param clientes lista de clientes a insertar
      */
-    void insertAll(List<Cliente> clientes) throws SQLException;
+    void insertAll(List<Cliente> clientes);
 
-
+    /**
+     * Obtiene los clientes junto con su gasto total, ordenados de mayor a menor facturación.
+     *
+     * @return una lista de {@link ClienteFacturadoDTO}, una por cada cliente con al menos una factura
+     */
     List<ClienteFacturadoDTO> getClientsOrderedByBilling();
 }
