@@ -16,10 +16,12 @@ import java.sql.Connection;
 public abstract class DAOFactory{
 
     /**
-     * Devuelve la instancia según el tipo de DB
-     * @param db
-     * @param connection
-     * @return
+     * Devuelve la instancia de fábrica correspondiente al motor de base de datos indicado.
+     *
+     * @param db         motor de base de datos para el que se necesita la fábrica
+     * @param connection conexión que usarán los DAOs creados por la fábrica
+     * @return la {@link DAOFactory} concreta correspondiente a {@code db}
+     * @throws IllegalArgumentException si {@code db} no tiene una fábrica soportada
      */
     public static DAOFactory getInstance(DbEngine db, Connection connection) {
            switch (db){
@@ -30,9 +32,28 @@ public abstract class DAOFactory{
            }
     }
 
+    /**
+     * @return el {@link ClienteDAO} de esta fábrica
+     */
     public abstract ClienteDAO getClienteDAO();
+
+    /**
+     * @return el {@link FacturaDAO} de esta fábrica
+     */
     public abstract FacturaDAO getFacturaDAO();
+
+    /**
+     * @return el {@link ProductoDAO} de esta fábrica
+     */
     public abstract ProductoDAO getProductoDAO();
+
+    /**
+     * @return el {@link FacturaProductoDAO} de esta fábrica
+     */
     public abstract FacturaProductoDAO getFacturaProductoDAO();
+
+    /**
+     * @return el {@link SchemaDAO} de esta fábrica
+     */
     public abstract SchemaDAO getSchemaDAO();
 }

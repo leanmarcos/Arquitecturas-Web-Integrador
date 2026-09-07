@@ -11,22 +11,22 @@ import org.example.dto.ProductoRecaudadoDTO;
 import org.example.entity.Producto;
 
 /**
- * Implementa FacturaProductoDAO y contiene las operaciones SQL necesarias para gestionar las relaciones entre facturas y productos.
+ * Implementa ProductoDAO y contiene las operaciones SQL necesarias para gestionar los productos almacenados en MySQL.
  */
 
 public class MySqlProductoDAO implements ProductoDAO {
 
-    private final Connection conn;
+    private final Connection connection;
 
-    public MySqlProductoDAO(Connection conn) {
-        this.conn = conn;
+    public MySqlProductoDAO(Connection connection) {
+        this.connection = connection;
     }
 
     @Override
     public void insertAll(List<Producto> productos) {
         String query = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
             for (Producto producto : productos) {
                 stmt.setInt(1, producto.getIdProducto());
                 stmt.setString(2, producto.getNombre());
@@ -43,13 +43,13 @@ public class MySqlProductoDAO implements ProductoDAO {
     public void update(int id, String name, Float price){
         String query = "UPDATE producto SET nombre = ?, valor = ? WHERE idProducto = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, name);
             stmt.setFloat(2, price);
             stmt.setInt(3, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al actualizar producto con id " + id, e);
         }
     }
 
@@ -57,11 +57,11 @@ public class MySqlProductoDAO implements ProductoDAO {
     public void delete(int id){
         String query = "DELETE FROM producto WHERE idProducto = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al eliminar producto con id " + id, e);
         }
     }
 
@@ -69,18 +69,16 @@ public class MySqlProductoDAO implements ProductoDAO {
     public Producto select(int id){
         String query = "SELECT * FROM producto WHERE idProducto = ?";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)){
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            Producto producto = mapProduct(rs);
-
-            if (producto == null){
-                return null;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+                return mapProduct(rs);
             }
-            return producto;
-        } catch(Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al buscar producto con id " + id, e);
         }
     }
 
@@ -90,50 +88,32 @@ public class MySqlProductoDAO implements ProductoDAO {
 
         List<Producto> products = new ArrayList<>();
 
-        try (PreparedStatement stmt = conn.prepareStatement(query)){
-            ResultSet rs = stmt.executeQuery();
+        try (PreparedStatement stmt = connection.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
-            while(rs.next()){
-                Producto producto = mapProduct(rs);
-                products.add(producto);
+            while (rs.next()) {
+                products.add(mapProduct(rs));
             }
 
             return products;
 
-        } catch(Exception e){
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al obtener productos", e);
         }
-        return null;
     }
 
+    /**
+     * Mapea la fila actual de un {@link ResultSet} a un {@link Producto}.
+     *
+     * @param rs result set ya posicionado en una fila válida (se asume que ya se llamó a {@code rs.next()})
+     * @return el {@link Producto} construido a partir de la fila actual
+     * @throws SQLException si falla la lectura de alguna columna
+     */
     private Producto mapProduct(ResultSet rs) throws SQLException {
-        try {
-            Producto p = new Producto(rs.getInt("idProducto"),
-                    rs.getString("nombre"),
-                    rs.getFloat("valor")
-            );
-            return p;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void insertBatch(List<Producto> productos) throws SQLException {
-        String query = "INSERT INTO producto (idProducto, nombre, valor) VALUES (?, ?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            for (Producto p : productos) {
-                stmt.setInt(1, p.getIdProducto());
-                stmt.setString(2, p.getNombre());
-                stmt.setFloat(3, p.getValor());
-                stmt.addBatch();
-            }
-            stmt.executeBatch();
-            System.out.println("Insertados " + productos.size() + " productos.");
-        }
+        return new Producto(rs.getInt("idProducto"),
+                rs.getString("nombre"),
+                rs.getFloat("valor")
+        );
     }
 
     /**
@@ -144,7 +124,7 @@ public class MySqlProductoDAO implements ProductoDAO {
      * <p>
      * En caso de empate en recaudación entre dos o más productos, se devuelve el de menor {@code idProducto}
      *
-     * @return El {@link Producto} con mayor recaudación, o {@code null}
+     * @return El {@link ProductoRecaudadoDTO} con mayor recaudación, o {@code null}
      *         si no hay ventas cargadas (tabla {@code factura_producto} vacía)
      */
     @Override
@@ -157,7 +137,7 @@ public class MySqlProductoDAO implements ProductoDAO {
                         "ORDER BY recaudacion DESC, p.idProducto ASC " +
                         "LIMIT 1";
 
-        try (PreparedStatement stmt = conn.prepareStatement(query);
+        try (PreparedStatement stmt = connection.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 return new ProductoRecaudadoDTO(

@@ -31,8 +31,8 @@ public class ConnectionManagerSingleton {
     }
 
     /**
-     * Instancia su propia clase cumpliendo con el patón Singleton si es que no lo hizo antes
-     * @return ConnectionManagerSingleton instance
+     * Instancia su propia clase cumpliendo con el patrón Singleton si es que no lo hizo antes
+     * @return la única instancia de {@link ConnectionManagerSingleton}
      */
     public static ConnectionManagerSingleton getInstance() { // Instanciamos la conexion
         if (instance == null){
@@ -42,15 +42,15 @@ public class ConnectionManagerSingleton {
     }
 
     /**
-     * Devuelve la conección a la BBDD
-     * @return Connection conn
+     * Devuelve la conexión a la BBDD
+     * @return la {@link Connection} activa hacia la base de datos
      */
    public Connection getConnection(){
         return conn;
    }
 
     /**
-     * Cierra dando por finalizada la conección a la base de datos
+     * Cierra dando por finalizada la conexión a la base de datos
      */
    public void closeConnection() {
         if (this.conn != null) {

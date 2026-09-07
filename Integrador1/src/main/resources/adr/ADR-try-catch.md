@@ -6,7 +6,7 @@ terminar. `finally` sirve cuando el recurso no es tuyo — lo tomaste prestado, 
 ### En `MySqlClienteDAO`
 
 ``` java
-public void insertBatch(List<Cliente> clientes) throws SQLException {
+public void insertAll(List<Cliente> clientes) throws SQLException {
     String sql = "INSERT INTO cliente (...) VALUES (?, ?, ?)";
     try (PreparedStatement stmt = connection.prepareStatement(sql)) {
         for (Cliente cliente : clientes) {

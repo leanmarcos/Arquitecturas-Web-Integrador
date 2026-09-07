@@ -40,7 +40,8 @@ public class DataLoader {
      * Autocommit en false = Agrupa todo lo que se ejecute de aca en adelante hasta que se pida que se cierre con
      * commit()
      *
-     * @throws SQLException
+     * @return un {@link DataResult} con la cantidad de registros cargados por entidad
+     * @throws SQLException si falla el commit, el rollback o el restablecimiento del autocommit
      */
     public DataResult loadAllData() throws SQLException {
         DataResult resultado = new DataResult();
@@ -66,8 +67,8 @@ public class DataLoader {
 
     /**
      * Gestiona la carga de clientes
-     * @return
-     * @throws SQLException
+     * @return la cantidad de clientes insertados
+     * @throws SQLException si falla la inserción en la base de datos
      */
     private int loadClientes() throws SQLException {
         List<Cliente> clientes = csvImporter.importar("/data/clientes.csv",
@@ -79,8 +80,8 @@ public class DataLoader {
 
     /**
      * Gestiona la carga de productos
-     * @return
-     * @throws SQLException
+     * @return la cantidad de productos insertados
+     * @throws SQLException si falla la inserción en la base de datos
      */
     private int loadProductos() throws SQLException {
         List<Producto> productos = csvImporter.importar("/data/productos.csv",
@@ -92,8 +93,8 @@ public class DataLoader {
 
     /**
      * Gestiona la carga de facturas
-     * @return
-     * @throws SQLException
+     * @return la cantidad de facturas insertadas
+     * @throws SQLException si falla la inserción en la base de datos
      */
     private int loadFacturas() throws SQLException {
         List<Factura> facturas = csvImporter.importar("/data/facturas.csv",
@@ -105,8 +106,8 @@ public class DataLoader {
 
     /**
      * Gestiona la carga de facturasProductos
-     * @return
-     * @throws SQLException
+     * @return la cantidad de relaciones factura-producto insertadas
+     * @throws SQLException si falla la inserción en la base de datos
      */
     private int loadFacturasProductos() throws SQLException {
         List<FacturaProducto> detalles = csvImporter.importar("/data/facturas-productos.csv",

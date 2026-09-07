@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Implementa ProductoDAO y contiene las operaciones SQL necesarias para gestionar los productos almacenados en MySQL.
+ * Implementa FacturaDAO y contiene las operaciones SQL necesarias para gestionar las facturas almacenadas en MySQL.
  */
 
 public class MySqlFacturaDAO implements FacturaDAO {
@@ -38,15 +38,15 @@ public class MySqlFacturaDAO implements FacturaDAO {
     }
 
     @Override
-    public void deleteFacturaById(int id){
+    public void deleteFacturaById(int idFactura){
         String query = "DELETE FROM factura WHERE idFactura = ?";
 
         try(PreparedStatement stmt = connection.prepareStatement(query)){
-            stmt.setInt(1, id);
+            stmt.setInt(1, idFactura);
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException("Error al eliminar factura con id " + id, e);
+            throw new RuntimeException("Error al eliminar factura con id " + idFactura, e);
         }
     }
 }
