@@ -9,7 +9,7 @@
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/db-tp-integrador-2"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/db-tp-integrador-2?useSSL=false&amp;allowPublicKeyRetrieval=true"/>
             <property name="jakarta.persistence.jdbc.user" value="app_user"/>
             <property name="jakarta.persistence.jdbc.password" value="12345"/>
 
