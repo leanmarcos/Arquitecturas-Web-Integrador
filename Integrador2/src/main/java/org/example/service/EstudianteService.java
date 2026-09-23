@@ -1,6 +1,7 @@
 package org.example.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityTransaction;
 import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
@@ -13,6 +14,17 @@ public class EstudianteService {
     private final EstudianteRepository estudianteRepository;
     public EstudianteService (EstudianteRepository estudianteRepository){
         this.estudianteRepository = estudianteRepository;
+    }
+
+    public EstudianteResponseDTO findByLu(Long lu) {
+        if (lu == null) {
+            throw new IllegalArgumentException("La LU es obligatoria.");
+        }
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return estudianteRepository.findByLu(em, lu)
+                    .map(EstudianteMapper::toDto)
+                    .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con LU: " + lu));
+        }
     }
 
     public EstudianteResponseDTO create(EstudianteRequestDTO estudianteDto){
