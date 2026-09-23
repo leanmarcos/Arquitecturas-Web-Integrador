@@ -1,12 +1,16 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Table(name = "estudiante")
+@Getter
+@Setter
 public class Estudiante {
 
     @Id
@@ -23,7 +27,7 @@ public class Estudiante {
     private String apellido;
 
     @Column(name = "fecha_nacimiento", nullable = false)
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     @Column(nullable = false)
     private String genero;
@@ -33,6 +37,4 @@ public class Estudiante {
 
     @OneToMany(mappedBy = "estudiante")
     private List<EstudianteCarrera> inscripciones;
-
-
 }
