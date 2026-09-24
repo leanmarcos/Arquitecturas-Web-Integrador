@@ -10,6 +10,8 @@ import org.example.model.Estudiante;
 import org.example.repository.EstudianteRepository;
 import org.example.utils.JPAUtil;
 
+import java.util.List;
+
 public class EstudianteService {
     private final EstudianteRepository estudianteRepository;
     public EstudianteService (EstudianteRepository estudianteRepository){
@@ -24,6 +26,17 @@ public class EstudianteService {
             return estudianteRepository.findByLu(em, lu)
                     .map(EstudianteMapper::toDto)
                     .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con LU: " + lu));
+        }
+    }
+
+    public List<EstudianteResponseDTO> findAllByGenero(String genero) {
+        if (genero == null || genero.isBlank()) {
+            throw new IllegalArgumentException("El género es obligatorio.");
+        }
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return estudianteRepository.findAllByGenero(em, genero).stream()
+                    .map(EstudianteMapper::toDto)
+                    .toList();
         }
     }
 
