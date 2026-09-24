@@ -40,6 +40,14 @@ public class EstudianteService {
         }
     }
 
+    public List<EstudianteResponseDTO> findAllOrderByApellido(){
+        try(EntityManager em = JPAUtil.getEntityManager()) {
+            return estudianteRepository.findAllOrderByApellido(em).stream()
+                    .map(EstudianteMapper::toDto)
+                    .toList();
+        }
+    }
+
     public EstudianteResponseDTO create(EstudianteRequestDTO estudianteDto){
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();

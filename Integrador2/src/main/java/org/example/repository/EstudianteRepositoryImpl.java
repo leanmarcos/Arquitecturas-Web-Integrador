@@ -31,4 +31,12 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
         query.setParameter("genero", genero);
         return query.getResultList();
     }
+
+    @Override
+    public List<Estudiante> findAllOrderByApellido(EntityManager em) {
+        TypedQuery<Estudiante> query = em.createQuery(
+                "SELECT e FROM Estudiante e ORDER BY e.apellido", Estudiante.class
+        );
+        return query.getResultList();
+    }
 }

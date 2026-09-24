@@ -10,4 +10,5 @@ public interface EstudianteRepository {
     Estudiante save(EntityManager em, Estudiante estudiante);
     Optional<Estudiante> findByLu(EntityManager em, Long lu);
     List<Estudiante> findAllByGenero(EntityManager em, String genero);
+    List<Estudiante> findAllOrderByApellido(EntityManager em);
 }
