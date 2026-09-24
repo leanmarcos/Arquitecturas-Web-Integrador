@@ -68,4 +68,12 @@ public class EstudianteService {
         }
 
     }
+
+    Estudiante findEntityByDni(EntityManager em, Integer dni){
+        if (dni == null) {
+            throw new IllegalArgumentException("El DNI es obligatorio.");
+        }
+        return estudianteRepository.findByDni(em, dni)
+                .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con DNI: " + dni));
+    }
 }

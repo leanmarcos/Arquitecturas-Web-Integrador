@@ -1,5 +1,7 @@
 package org.example.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.example.dto.CarreraResponseDTO;
 import org.example.model.Carrera;
@@ -61,4 +63,11 @@ public class CarreraService {
     }
 
 
+    Carrera findEntityByName(EntityManager em, String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre de la carrera es obligatorio.");
+        }
+        return this.repository.findByNombre(em, nombre)
+                .orElseThrow(() -> new EntityNotFoundException("Carrera no encontrada con nombre: " + nombre));
+    }
 }

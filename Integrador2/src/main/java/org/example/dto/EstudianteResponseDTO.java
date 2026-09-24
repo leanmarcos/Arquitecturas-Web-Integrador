@@ -1,7 +1,10 @@
 package org.example.dto;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
 
+@Builder
 public record EstudianteResponseDTO(
         Long lu,
         Integer dni,
