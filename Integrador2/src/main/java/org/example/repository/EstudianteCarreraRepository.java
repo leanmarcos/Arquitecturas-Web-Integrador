@@ -1,5 +1,8 @@
 package org.example.repository;
 
+import jakarta.persistence.EntityManager;
+import org.example.model.EstudianteCarrera;
 
-public class EstudianteCarreraRepository {
+public interface EstudianteCarreraRepository {
+    EstudianteCarrera save(EntityManager em, EstudianteCarrera inscripcion);
 }
