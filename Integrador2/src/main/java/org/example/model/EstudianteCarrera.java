@@ -1,6 +1,10 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
 import java.time.LocalDate;
 
@@ -10,6 +14,8 @@ import java.time.LocalDate;
 @Check(constraints =
         "((graduado = TRUE AND fecha_graduacion IS NOT NULL) OR (graduado = FALSE AND fecha_graduacion IS NULL))" +
         " AND (fecha_graduacion IS NULL OR fecha_graduacion >= fecha_inscripcion)")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EstudianteCarrera {
 
     @Id
@@ -33,4 +39,10 @@ public class EstudianteCarrera {
     @Column(name = "graduado" , nullable = false)
     private boolean graduado;
 
+    @Builder
+    public EstudianteCarrera(Estudiante estudiante, Carrera carrera, LocalDate fechaInscripcion) {
+        this.estudiante = estudiante;
+        this.carrera = carrera;
+        this.fechaInscripcion = fechaInscripcion;
+    }
 }

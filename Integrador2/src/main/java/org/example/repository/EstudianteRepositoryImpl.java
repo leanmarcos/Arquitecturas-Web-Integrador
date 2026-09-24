@@ -24,6 +24,15 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
     }
 
     @Override
+    public Optional<Estudiante> findByDni(EntityManager em, Integer dni) {
+        TypedQuery<Estudiante> query = em.createQuery(
+                "SELECT e FROM Estudiante e WHERE e.dni = :dni", Estudiante.class
+        );
+        query.setParameter("dni", dni);
+        return query.getResultStream().findFirst();
+    }
+
+    @Override
     public List<Estudiante> findAllByGenero(EntityManager em, String genero) {
         TypedQuery<Estudiante> query = em.createQuery(
                 "SELECT e FROM Estudiante e WHERE e.genero = :genero", Estudiante.class

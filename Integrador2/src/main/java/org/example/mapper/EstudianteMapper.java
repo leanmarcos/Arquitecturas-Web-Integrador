@@ -6,14 +6,15 @@ import org.example.model.Estudiante;
 
 public class EstudianteMapper {
     public static EstudianteResponseDTO toDto(Estudiante estudiante){
-        return new EstudianteResponseDTO(
-                estudiante.getLu(),
-                estudiante.getDni(),
-                estudiante.getNombres(),
-                estudiante.getApellido(),
-                estudiante.getFechaNacimiento(),
-                estudiante.getGenero(),
-                estudiante.getCiudadResidencia());
+        return EstudianteResponseDTO.builder()
+                .lu(estudiante.getLu())
+                .dni(estudiante.getDni())
+                .nombres(estudiante.getNombres())
+                .apellido(estudiante.getApellido())
+                .fechaNacimiento(estudiante.getFechaNacimiento())
+                .genero(estudiante.getGenero())
+                .ciudadResidencia(estudiante.getCiudadResidencia())
+                .build();
     }
 
     public static Estudiante toEntity(EstudianteRequestDTO estudianteDto){
