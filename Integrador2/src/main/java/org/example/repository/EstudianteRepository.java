@@ -12,4 +12,5 @@ public interface EstudianteRepository {
     Optional<Estudiante> findByDni(EntityManager em, Integer dni);
     List<Estudiante> findAllByGenero(EntityManager em, String genero);
     List<Estudiante> findAllOrderByApellido(EntityManager em);
+    List<Estudiante> findAllByCarreraAndCiudad(EntityManager em, String nombreCarrera, String ciudad);
 }

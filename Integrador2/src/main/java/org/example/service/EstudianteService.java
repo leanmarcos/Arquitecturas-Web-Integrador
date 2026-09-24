@@ -48,6 +48,20 @@ public class EstudianteService {
         }
     }
 
+    public List<EstudianteResponseDTO> findAllByCarreraAndCiudad(String nombreCarrera, String ciudad) {
+        if (nombreCarrera == null || nombreCarrera.isBlank()) {
+            throw new IllegalArgumentException("La carrera es obligatoria.");
+        }
+        if (ciudad == null || ciudad.isBlank()) {
+            throw new IllegalArgumentException("La ciudad es obligatoria.");
+        }
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            return estudianteRepository.findAllByCarreraAndCiudad(em, nombreCarrera, ciudad.trim()).stream()
+                    .map(EstudianteMapper::toDto)
+                    .toList();
+        }
+    }
+
     public EstudianteResponseDTO create(EstudianteRequestDTO estudianteDto){
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
