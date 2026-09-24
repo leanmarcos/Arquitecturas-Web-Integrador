@@ -1,52 +1,34 @@
 package org.example.service;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import org.example.dto.EstudianteCarreraResponseDTO;
-import org.example.mapper.EstudianteCarreraMapper;
+import org.example.dto.EstudianteResponseDTO;
 import org.example.model.Carrera;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.example.dto.EstudianteResponseDTO;
+import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
-import org.example.model.EstudianteCarrera;
-import org.example.repository.EstudianteCarreraRepository;
+import org.example.repository.EstudianteRepositoryImpl;
 import org.example.utils.JPAUtil;
 
-import java.time.LocalDate;
-
 public class EstudianteCarreraService {
-    private final EstudianteCarreraRepository ecRepository;
-    private final EstudianteService estudianteService;
-    private final CarreraService carreraService;
 
-    public EstudianteCarreraService(EstudianteCarreraRepository ecRepository,
-                                    EstudianteService estudianteService,
-                                    CarreraService carreraService){
-        this.ecRepository = ecRepository;
-        this.estudianteService = estudianteService;
-        this.carreraService = carreraService;
-    }
+    private EstudianteRepositoryImpl studentRepository;
 
-    public EstudianteCarreraResponseDTO matricularEstudianteEnCarrera(Integer dni, String nombreCarrera){
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction tx = em.getTransaction();
+    //Recuperar estudiantes de una carrera filtrados por ciudad
+    public List<EstudianteResponseDTO> getCareerStudentsByCity(Carrera carrera, String city){
+        if (carrera == null || carrera.getId() == null) throw new IllegalArgumentException("La carrera es obligatoria.");
+        if (city == null || city.isBlank()) throw new IllegalArgumentException("La ciudad es obligatoria.");
 
-        try{
-            tx.begin();
-            Estudiante estudiante = estudianteService.findEntityByDni(em, dni);
-            Carrera carrera = carreraService.findEntityByName(em, nombreCarrera);
-            EstudianteCarrera inscripcion = ecRepository.save(em, EstudianteCarrera.builder()
-                    .estudiante(estudiante)
-                    .carrera(carrera)
-                    .fechaInscripcion(LocalDate.now())
-                    .build());
-            tx.commit();
-            return EstudianteCarreraMapper.toDto(inscripcion);
-        }catch(RuntimeException e){
-            if(tx.isActive()){
-                tx.rollback();
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            List<Estudiante> students = studentRepository.findStudentsByCarreraAndCity(em, carrera, city.trim());
+
+            List<EstudianteResponseDTO> responseDTOs = new ArrayList<>();
+            for (Estudiante student : students) {
+                responseDTOs.add(EstudianteMapper.toDto(student));
             }
-            throw e;
-        }finally {
-            em.close();
+            return responseDTOs;
         }
     }
 }

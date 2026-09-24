@@ -2,6 +2,7 @@ package org.example.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.example.model.Carrera;
 import org.example.model.Estudiante;
 
 import java.util.List;
@@ -46,6 +47,20 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
         TypedQuery<Estudiante> query = em.createQuery(
                 "SELECT e FROM Estudiante e ORDER BY e.apellido", Estudiante.class
         );
+        return query.getResultList();
+    }
+
+    public List<Estudiante> findStudentsByCarreraAndCity(EntityManager em, Carrera carrera, String city) {
+        TypedQuery<Estudiante> query = em.createQuery(
+                "SELECT e " +
+                        "FROM Estudiante e " +
+                        "JOIN e.inscripciones ec " +
+                        "WHERE ec.carrera = :carrera " +
+                        "AND LOWER(e.ciudadResidencia) = LOWER(:city)",
+                Estudiante.class
+        );
+        query.setParameter("carrera", carrera);
+        query.setParameter("city", city);
         return query.getResultList();
     }
 }
