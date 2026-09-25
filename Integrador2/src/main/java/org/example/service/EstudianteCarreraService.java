@@ -11,6 +11,7 @@ import org.example.repository.EstudianteCarreraRepository;
 import org.example.utils.JPAUtil;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class EstudianteCarreraService {
     private final EstudianteCarreraRepository ecRepository;
@@ -33,13 +34,17 @@ public class EstudianteCarreraService {
             tx.begin();
             Estudiante estudiante = estudianteService.findEntityByDni(em, dni);
             Carrera carrera = carreraService.findEntityByName(em, nombreCarrera);
+
             EstudianteCarrera inscripcion = ecRepository.save(em, EstudianteCarrera.builder()
                     .estudiante(estudiante)
                     .carrera(carrera)
                     .fechaInscripcion(LocalDate.now())
                     .build());
+
             tx.commit();
+
             return EstudianteCarreraMapper.toDto(inscripcion);
+
         }catch(RuntimeException e){
             if(tx.isActive()){
                 tx.rollback();
