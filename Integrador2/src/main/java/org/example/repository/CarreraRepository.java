@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CarreraRepository{
-    public Optional<Carrera> save(Carrera carrera);
+    public Optional<Carrera> save(EntityManager em, Carrera carrera);
 
-    public List<Carrera> findAll();
+    public List<Carrera> findAll(EntityManager em);
 
-    public Optional<Carrera>  findById(Long id);
+    public Optional<Carrera>  findById(EntityManager em, Long id);
 
-    public Optional<Carrera> deleteById(Long id);
+    public Optional<Carrera> deleteById(EntityManager em, Long id);
 
     Optional<Carrera> findByNombre(EntityManager em, String nombre);
 }
