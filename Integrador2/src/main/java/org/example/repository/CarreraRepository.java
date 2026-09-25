@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import jakarta.persistence.EntityManager;
+import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.model.Carrera;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface CarreraRepository{
 
     Optional<Carrera> findByNombre(EntityManager em, String nombre);
 
-    List<Object[]> findCarreraWithEstudiantes(EntityManager em);
+    List<CarreraInscriptosResponseDTO> findCarreraWithEstudiantes(EntityManager em);
 }
