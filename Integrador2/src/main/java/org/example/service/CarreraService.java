@@ -5,7 +5,6 @@ import jakarta.persistence.EntityTransaction;
 import lombok.AllArgsConstructor;
 import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.dto.CarreraResponseDTO;
-import org.example.mapper.CarreraMapper;
 import org.example.exceptions.CarreraExistingException;
 import org.example.exceptions.CarreraNotFoundException;
 import org.example.exceptions.UnexpectedException;
@@ -136,9 +135,7 @@ public class CarreraService {
 
     public List<CarreraInscriptosResponseDTO> obtenerCarrerasConCantInscriptos(){
         try (EntityManager em = JPAUtil.getEntityManager()) {
-            return repository.findCarreraWithEstudiantes(em).stream()
-                    .map(CarreraMapper::toDto)
-                    .toList();
+            return repository.findCarreraWithEstudiantes(em);
         }
     }
 

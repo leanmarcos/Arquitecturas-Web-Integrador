@@ -2,6 +2,7 @@ package org.example.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.model.Carrera;
 
 import java.util.List;
@@ -41,28 +42,29 @@ public class CarreraRepositoryImpl implements CarreraRepository{
      * Recupera las carreras que poseen al menos un estudiante inscripto,
      * ordenadas por la cantidad total de inscriptos en orden descendente.
      * <p>
-     *  Cuando un SELECT de JPQL trae varias columnas sueltas (c.nombre, COUNT(ce)), JPA no tiene una entidad donde
-     *  meterlas y devuelve cada fila como Object[].
+     * Cuando un SELECT de JPQL trae varias columnas sueltas (c.nombre, COUNT(ce)), no hay una entidad donde
+     * guardarlas. En vez de recibir cada fila como {@code Object[]}, usamos una constructor expression
+     * ({@code SELECT new ...}) para que JPA arme directamente el DTO. Ver ADR-constructor-expression.md.
      * <p>
-     * Por eso cada elemento de la lista es un arreglo {@code Object[]} con la siguiente estructura:
+     * Cada elemento de la lista es un {@link CarreraInscriptosResponseDTO} con:
      * <ul>
-     *   <li>{@code [0]} ({@link String}): Nombre de la carrera.</li>
-     *   <li>{@code [1]} ({@link Long}): Cantidad de estudiantes inscriptos.</li>
+     *   <li>{@code nombre} ({@link String}): Nombre de la carrera.</li>
+     *   <li>{@code totalInscriptos} ({@link Long}): Cantidad de estudiantes inscriptos.</li>
      * </ul>
      *
      * @param em Instancia de {@link EntityManager} utilizada para ejecutar la consulta.
-     * @return Lista de tuplas {@code Object[]} con el nombre y la cantidad de inscriptos por carrera.
+     * @return Lista de {@link CarreraInscriptosResponseDTO} con el nombre y la cantidad de inscriptos por carrera.
      */
     @Override
-    public List<Object[]> findCarreraWithEstudiantes(EntityManager em) {
-        TypedQuery<Object[]> query = em.createQuery(
+    public List<CarreraInscriptosResponseDTO> findCarreraWithEstudiantes(EntityManager em) {
+        TypedQuery<CarreraInscriptosResponseDTO> query = em.createQuery(
                 """
-                SELECT c.nombre, COUNT(ce) AS total_inscriptos 
+                SELECT new org.example.dto.CarreraInscriptosResponseDTO(c.nombre, COUNT(ce))
                 FROM Carrera c
                 JOIN c.estudiantes ce
                 GROUP BY c.nombre
-                ORDER BY total_inscriptos DESC
-                """, Object[].class
+                ORDER BY COUNT(ce) DESC
+                """, CarreraInscriptosResponseDTO.class
         );
         return query.getResultList();
     }
