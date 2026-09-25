@@ -16,4 +16,6 @@ public interface CarreraRepository{
     public Optional<Carrera> deleteById(EntityManager em, Long id);
 
     Optional<Carrera> findByNombre(EntityManager em, String nombre);
+
+    List<Object[]> findCarreraWithEstudiantes(EntityManager em);
 }
