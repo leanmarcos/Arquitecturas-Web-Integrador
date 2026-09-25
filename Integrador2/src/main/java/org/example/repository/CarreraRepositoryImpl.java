@@ -9,22 +9,22 @@ import java.util.Optional;
 
 public class CarreraRepositoryImpl implements CarreraRepository{
     @Override
-    public Optional<Carrera> save(Carrera carrera) {
+    public Optional<Carrera> save(EntityManager em, Carrera carrera) {
         return Optional.empty();
     }
 
     @Override
-    public List<Carrera> findAll() {
+    public List<Carrera> findAll(EntityManager em) {
         return List.of();
     }
 
     @Override
-    public Optional<Carrera> findById(Long id) {
+    public Optional<Carrera> findById(EntityManager em, Long id) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<Carrera> deleteById(Long id) {
+    public Optional<Carrera> deleteById(EntityManager em, Long id) {
         return Optional.empty();
     }
 
