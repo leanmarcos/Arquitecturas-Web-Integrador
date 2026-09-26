@@ -2,7 +2,7 @@ package org.example.dto;
 
 import lombok.Builder;
 
-import java.time.LocalDate;
+import java.time.Year;
 
 @Builder
 public record EstudianteCarreraResponseDTO(
@@ -10,8 +10,8 @@ public record EstudianteCarreraResponseDTO(
         Long luEstudiante,
         Long idCarrera,
         String nombreCarrera,
-        LocalDate fechaInscripcion,
-        LocalDate fechaGraduacion,
+        Year anioInscripcion,
+        Year anioGraduacion,
         boolean graduado
 ) {
 }
