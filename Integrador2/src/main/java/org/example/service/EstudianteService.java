@@ -7,6 +7,7 @@ import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
+import org.example.model.EstudianteGenero;
 import org.example.repository.EstudianteRepository;
 import org.example.utils.JPAUtil;
 
@@ -31,11 +32,10 @@ public class EstudianteService {
     }
 
     public List<EstudianteResponseDTO> findAllByGenero(String genero) {
-        if (genero == null || genero.isBlank()) {
-            throw new IllegalArgumentException("El género es obligatorio.");
-        }
+        EstudianteGenero generoBuscado = EstudianteGenero.from(genero)
+                .orElseThrow(() -> new IllegalArgumentException("Género inválido: " + genero));
         try (EntityManager em = JPAUtil.getEntityManager()) {
-            return estudianteRepository.findAllByGenero(em, genero).stream()
+            return estudianteRepository.findAllByGenero(em, generoBuscado).stream()
                     .map(EstudianteMapper::toDto)
                     .toList();
         }

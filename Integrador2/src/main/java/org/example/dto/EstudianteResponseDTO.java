@@ -1,8 +1,7 @@
 package org.example.dto;
 
 import lombok.Builder;
-
-import java.time.LocalDate;
+import org.example.model.EstudianteGenero;
 
 @Builder
 public record EstudianteResponseDTO(
@@ -10,8 +9,8 @@ public record EstudianteResponseDTO(
         Integer dni,
         String nombres,
         String apellido,
-        LocalDate fechaNacimiento,
-        String genero,
+        Integer edad,
+        EstudianteGenero genero,
         String ciudadResidencia
 ) {
 }

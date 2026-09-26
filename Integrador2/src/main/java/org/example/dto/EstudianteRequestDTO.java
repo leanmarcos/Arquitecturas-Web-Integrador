@@ -1,16 +1,22 @@
 package org.example.dto;
 
-import java.time.LocalDate;
+import lombok.Builder;
+import org.example.model.EstudianteGenero;
 
+@Builder
 public record EstudianteRequestDTO(
+        Long lu,
         Integer dni,
         String nombres,
         String apellido,
-        LocalDate fechaNacimiento,
+        Integer edad,
         String genero,
         String ciudadResidencia
 ) {
     public EstudianteRequestDTO {
+        if (lu == null || lu <= 0) {
+            throw new IllegalArgumentException("La LU debe ser un número positivo.");
+        }
         if (dni == null || dni <= 0) {
             throw new IllegalArgumentException("El DNI debe ser un número positivo.");
         }
@@ -20,11 +26,11 @@ public record EstudianteRequestDTO(
         if (apellido == null || apellido.isBlank()) {
             throw new IllegalArgumentException("El apellido no puede estar vacío.");
         }
-        if (fechaNacimiento == null) {
-            throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
+        if (edad == null || edad <= 0) {
+            throw new IllegalArgumentException("La edad debe ser un número positivo.");
         }
-        if (genero == null || genero.isBlank()) {
-            throw new IllegalArgumentException("El género no puede estar vacío.");
+        if (EstudianteGenero.from(genero).isEmpty()) {
+            throw new IllegalArgumentException("Género inválido: " + genero);
         }
         if (ciudadResidencia == null || ciudadResidencia.isBlank()) {
             throw new IllegalArgumentException("La ciudad de residencia no puede estar vacía.");
