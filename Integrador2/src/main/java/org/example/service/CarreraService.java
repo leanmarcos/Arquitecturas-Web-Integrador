@@ -4,10 +4,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import lombok.AllArgsConstructor;
 import org.example.dto.CarreraInscriptosResponseDTO;
+import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
 import org.example.exceptions.CarreraExistingException;
 import org.example.exceptions.CarreraNotFoundException;
 import org.example.exceptions.UnexpectedException;
+import org.example.mapper.CarreraMapper;
 import org.example.model.Carrera;
 import org.example.repository.CarreraRepository;
 import org.example.utils.JPAUtil;
@@ -34,11 +36,7 @@ public class CarreraService {
         }
     }
 
-    public CarreraResponseDTO save(Carrera carrera) {
-        validarCarrera(carrera);
-
-        String nombre = carrera.getNombre().trim();
-
+    public CarreraResponseDTO save(CarreraRequestDTO carreraDto) {
         try (EntityManager em = JPAUtil.getEntityManager()) {
             EntityTransaction tx = em.getTransaction();
 
@@ -46,13 +44,13 @@ public class CarreraService {
                 tx.begin();
 
                 Optional<Carrera> existente =
-                        repository.findByNombre(em, nombre);
+                        repository.findByNombre(em, carreraDto.nombre());
 
                 if (existente.isPresent()) {
                     throw new CarreraExistingException();
                 }
 
-                Carrera guardada = repository.save(em, carrera)
+                Carrera guardada = repository.save(em, CarreraMapper.toEntity(carreraDto))
                         .orElseThrow(UnexpectedException::new);
 
                 tx.commit();
@@ -136,28 +134,6 @@ public class CarreraService {
     public List<CarreraInscriptosResponseDTO> obtenerCarrerasConCantInscriptos(){
         try (EntityManager em = JPAUtil.getEntityManager()) {
             return repository.findCarreraWithEstudiantes(em);
-        }
-    }
-
-    private void validarCarrera(Carrera carrera) {
-        if (carrera == null) {
-            throw new IllegalArgumentException(
-                    "La carrera es obligatoria."
-            );
-        }
-
-        String nombre = carrera.getNombre();
-
-        if (nombre == null || nombre.isBlank()) {
-            throw new IllegalArgumentException(
-                    "El nombre de la carrera es obligatorio."
-            );
-        }
-
-        if (nombre.trim().length() > 255) {
-            throw new IllegalArgumentException(
-                    "El nombre de la carrera no puede superar los 255 caracteres."
-            );
         }
     }
 
