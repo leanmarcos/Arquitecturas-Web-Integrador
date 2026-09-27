@@ -11,7 +11,8 @@ import java.util.Optional;
 public class CarreraRepositoryImpl implements CarreraRepository{
     @Override
     public Optional<Carrera> save(EntityManager em, Carrera carrera) {
-        return Optional.empty();
+        em.persist(carrera);
+        return Optional.of(carrera);
     }
 
     @Override

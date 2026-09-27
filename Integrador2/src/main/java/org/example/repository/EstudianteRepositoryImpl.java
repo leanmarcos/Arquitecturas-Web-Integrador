@@ -3,6 +3,7 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.model.Estudiante;
+import org.example.model.EstudianteGenero;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +11,8 @@ import java.util.Optional;
 public class EstudianteRepositoryImpl implements EstudianteRepository{
     @Override
     public Estudiante save(EntityManager em, Estudiante estudiante) {
-        if(estudiante.getLu() == null){
-            em.persist(estudiante);
-        }else{
-            estudiante = em.merge(estudiante);
-        }
+        // la LU viene asignada (no es autogenerada): persist falla si ya existe, merge la pisaría
+        em.persist(estudiante);
         return estudiante;
     }
 
@@ -33,7 +31,7 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
     }
 
     @Override
-    public List<Estudiante> findAllByGenero(EntityManager em, String genero) {
+    public List<Estudiante> findAllByGenero(EntityManager em, EstudianteGenero genero) {
         TypedQuery<Estudiante> query = em.createQuery(
                 "SELECT e FROM Estudiante e WHERE e.genero = :genero", Estudiante.class
         );
@@ -55,7 +53,7 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
                 SELECT e FROM Estudiante e
                 JOIN e.inscripciones ec
                 WHERE ec.carrera.nombre = :nombreCarrera
-                AND LOWER(e.ciudadResidencia) = LOWER(:ciudad)
+                AND e.ciudadResidencia = :ciudad
                 """, Estudiante.class
         );
         query.setParameter("nombreCarrera", nombreCarrera);
