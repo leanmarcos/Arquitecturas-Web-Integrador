@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.model.Carrera;
+import org.example.reporte.ReporteFilaDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,6 +67,25 @@ public class CarreraRepositoryImpl implements CarreraRepository{
                 GROUP BY c.nombre
                 ORDER BY COUNT(ce) DESC
                 """, CarreraInscriptosResponseDTO.class
+        );
+        return query.getResultList();
+    }
+
+    /**
+     * Recupera cada inscripción como una fila plana. El orden del reporte lo define el service.
+     *
+     * @param em Instancia de {@link EntityManager} utilizada para ejecutar la consulta.
+     * @return Lista de {@link ReporteFilaDTO}, una por inscripción.
+     */
+    @Override
+    public List<ReporteFilaDTO> findFilasReporte(EntityManager em) {
+        TypedQuery<ReporteFilaDTO> query = em.createQuery(
+                """
+                SELECT new org.example.reporte.ReporteFilaDTO(
+                    c.nombre, ec.anioInscripcion, ec.anioGraduacion, ec.estudiante)
+                FROM Carrera c
+                JOIN c.estudiantes ec
+                """, ReporteFilaDTO.class
         );
         return query.getResultList();
     }

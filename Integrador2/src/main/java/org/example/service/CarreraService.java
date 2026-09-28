@@ -6,17 +6,25 @@ import lombok.AllArgsConstructor;
 import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
+import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.CarreraExistingException;
 import org.example.exceptions.CarreraNotFoundException;
 import org.example.exceptions.UnexpectedException;
 import org.example.mapper.CarreraMapper;
 import org.example.model.Carrera;
+import org.example.reporte.CarreraReporteDTO;
+import org.example.reporte.EventoCarrera;
+import org.example.reporte.ReporteCarrerasMapper;
+import org.example.reporte.TipoEvento;
 import org.example.repository.CarreraRepository;
 import org.example.utils.JPAUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class CarreraService {
@@ -142,6 +150,44 @@ public class CarreraService {
             throw new IllegalArgumentException(
                     "El id de la carrera debe ser válido."
             );
+        }
+    }
+
+    /**
+     * Genera el reporte de inscriptos y egresados por año de cada carrera,
+     * con las carreras en orden alfabético y los años en orden cronológico.
+     */
+    public List<CarreraReporteDTO> getCarreraReporteByAnio(){
+        try (EntityManager em = JPAUtil.getEntityManager()){
+            Map<CarreraReporteDTO.CarreraAnioKey, List<EventoCarrera>> eventosPorCarreraYAnio = repository.findFilasReporte(em).stream()
+                    .flatMap(ReporteCarrerasMapper::toEventos)
+                    .collect(Collectors.groupingBy(e -> new CarreraReporteDTO.CarreraAnioKey(e.carrera(), e.anio())));
+
+            List<CarreraReporteDTO> reportes = new ArrayList<>();
+
+            for(Map.Entry<CarreraReporteDTO.CarreraAnioKey, List<EventoCarrera>> entry : eventosPorCarreraYAnio.entrySet()){
+                List<EstudianteResponseDTO> inscriptos = new ArrayList<>();
+                List<EstudianteResponseDTO> egresados = new ArrayList<>();
+
+                for(EventoCarrera evento : entry.getValue()){
+                    if(TipoEvento.INSCRIPCION.equals(evento.tipo())){
+                        inscriptos.add(evento.estudiante());
+                    } else {
+                        egresados.add(evento.estudiante());
+                    }
+                }
+
+                CarreraReporteDTO reporte = CarreraReporteDTO.builder()
+                        .carreraAnioKey(entry.getKey())
+                        .inscriptos(inscriptos)
+                        .egresados(egresados)
+                        .build();
+                reportes.add(reporte);
+            }
+
+            reportes.sort(Comparator.comparing((CarreraReporteDTO r) -> r.carreraAnioKey().carrera())
+                    .thenComparing(r -> r.carreraAnioKey().anio()));
+            return reportes;
         }
     }
 }
