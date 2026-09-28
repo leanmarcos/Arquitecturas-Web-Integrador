@@ -3,6 +3,7 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CarreraInscriptosResponseDTO;
+import org.example.dto.FilaReporteDTO;
 import org.example.model.Carrera;
 
 import java.util.List;
@@ -66,6 +67,45 @@ public class CarreraRepositoryImpl implements CarreraRepository{
                 GROUP BY c.nombre
                 ORDER BY COUNT(ce) DESC
                 """, CarreraInscriptosResponseDTO.class
+        );
+        return query.getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO},
+     * delegando el agrupamiento y conteo directamente al motor de base de datos.
+     */
+    @Override
+    public List<FilaReporteDTO> findInscriptosPorAnio(EntityManager em) {
+        TypedQuery<FilaReporteDTO> query = em.createQuery(
+                """
+                SELECT new org.example.dto.FilaReporteDTO(c.nombre, ec.anioInscripcion, COUNT(ec))
+                FROM EstudianteCarrera ec
+                JOIN ec.carrera c
+                GROUP BY c.nombre, ec.anioInscripcion
+                """, FilaReporteDTO.class
+        );
+        return query.getResultList();
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO},
+     * filtrando únicamente aquellas inscripciones con graduación efectiva (no nula).
+     */
+    @Override
+    public List<FilaReporteDTO> findEgresadosPorAnio(EntityManager em) {
+        TypedQuery<FilaReporteDTO> query = em.createQuery(
+                """
+                SELECT new org.example.dto.FilaReporteDTO(c.nombre, ec.anioGraduacion, COUNT(ec))
+                FROM EstudianteCarrera ec
+                JOIN ec.carrera c
+                WHERE ec.anioGraduacion IS NOT NULL
+                GROUP BY c.nombre, ec.anioGraduacion
+                """, FilaReporteDTO.class
         );
         return query.getResultList();
     }
