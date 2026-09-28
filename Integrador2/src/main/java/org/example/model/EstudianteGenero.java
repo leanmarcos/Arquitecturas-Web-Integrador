@@ -4,24 +4,33 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum EstudianteGenero {
-    MALE("Male", "Masculino"),
-    FEMALE("Female", "Femenino"),
-    POLYGENDER("Polygender"),
-    GENDERFLUID("Genderfluid"),
-    AGENDER("Agender"),
-    BIGENDER("Bigender"),
-    NON_BINARY("Non-binary");
+    MALE("Masculino", "Male"),
+    FEMALE("Femenino", "Female"),
+    POLYGENDER("Poligénero", "Polygender"),
+    GENDERFLUID("Género fluido", "Genderfluid"),
+    AGENDER("Agénero", "Agender"),
+    BIGENDER("Bigénero", "Bigender"),
+    NON_BINARY("No binario", "Non-binary");
 
-    private final String[] valores;
+    private final String etiqueta;
+    private final String valorCsv;
 
-    EstudianteGenero(String... valores) {
-        this.valores = valores;
+    EstudianteGenero(String etiqueta, String valorCsv) {
+        this.etiqueta = etiqueta;
+        this.valorCsv = valorCsv;
+    }
+
+    /**
+     * Nombre en español para mostrar (ej: "Femenino").
+     */
+    public String getEtiqueta() {
+        return etiqueta;
     }
 
     /**
      * Convierte un texto (ej: "Female", "femenino") al género correspondiente, sin distinguir mayúsculas.
      * <p>
-     * Acepta los valores en inglés del CSV y también "Masculino" / "Femenino", así una búsqueda por
+     * Acepta el valor en inglés del CSV y también la etiqueta en español, así una búsqueda por
      * "Femenino" encuentra a los estudiantes cargados como "Female".
      *
      * @param valor texto a convertir
@@ -33,7 +42,8 @@ public enum EstudianteGenero {
         }
         String buscado = valor.trim();
         return Arrays.stream(values())
-                .filter(genero -> Arrays.stream(genero.valores).anyMatch(buscado::equalsIgnoreCase))
+                .filter(genero -> genero.valorCsv.equalsIgnoreCase(buscado)
+                        || genero.etiqueta.equalsIgnoreCase(buscado))
                 .findFirst();
     }
 }
