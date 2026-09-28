@@ -3,6 +3,7 @@ package org.example;
 import org.example.loader.DataLoader;
 import org.example.loader.DataResult;
 import org.example.loader.DataResult.Conteo;
+import org.example.reporte.CarreraReporteDTO;
 import org.example.repository.CarreraRepositoryImpl;
 import org.example.repository.EstudianteCarreraRepositoryImpl;
 import org.example.repository.EstudianteRepositoryImpl;
@@ -25,6 +26,11 @@ public class Main {
             imprimir("carreras", resultado.carreras());
             imprimir("estudiantes", resultado.estudiantes());
             imprimir("inscripciones", resultado.inscripciones());
+
+            System.out.println("\n=== Reporte de carreras por año ===\n");
+            for (CarreraReporteDTO reporte : carreraService.getCarreraReporteByAnio()) {
+                System.out.println(reporte);
+            }
         } finally {
             JPAUtil.close();
         }
