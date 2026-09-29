@@ -6,10 +6,8 @@ import lombok.Builder;
  * @param nombre se guarda sin espacios al principio ni al final
  */
 @Builder
-public record CarreraRequestDTO(
-        String nombre,
-        Integer duracion
-) {
+public record CarreraRequestDTO(String nombre, Integer duracion) {
+
     private static final int NOMBRE_MAX_LENGTH = 255;
 
     public CarreraRequestDTO {

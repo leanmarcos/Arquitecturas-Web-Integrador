@@ -4,21 +4,16 @@ import jakarta.persistence.EntityManager;
 import org.example.dto.CarreraInscriptosResponseDTO;
 import org.example.dto.FilaReporteDTO;
 import org.example.model.Carrera;
-
 import java.util.List;
 import java.util.Optional;
 
-public interface CarreraRepository{
-    public Optional<Carrera> save(EntityManager em, Carrera carrera);
+public interface CarreraRepository {
 
-    public List<Carrera> findAll(EntityManager em);
-
-    public Optional<Carrera>  findById(EntityManager em, Long id);
-
-    public Optional<Carrera> deleteById(EntityManager em, Long id);
-
+    Optional<Carrera> save(EntityManager em, Carrera carrera);
+    List<Carrera> findAll(EntityManager em);
+    Optional<Carrera>  findById(EntityManager em, Long id);
+    Optional<Carrera> deleteById(EntityManager em, Long id);
     Optional<Carrera> findByNombre(EntityManager em, String nombre);
-
     List<CarreraInscriptosResponseDTO> findCarreraWithEstudiantes(EntityManager em);
 
     /**

@@ -3,13 +3,13 @@ package org.example.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Entity
 @Table(name = "estudiante")
 @Getter
 @Setter
+
 public class Estudiante {
 
     @Id
@@ -36,4 +36,5 @@ public class Estudiante {
 
     @OneToMany(mappedBy = "estudiante")
     private List<EstudianteCarrera> inscripciones;
+
 }

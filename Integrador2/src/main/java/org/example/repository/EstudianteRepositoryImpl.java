@@ -4,11 +4,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
-
 import java.util.List;
 import java.util.Optional;
 
-public class EstudianteRepositoryImpl implements EstudianteRepository{
+public class EstudianteRepositoryImpl implements EstudianteRepository {
+
     @Override
     public Estudiante save(EntityManager em, Estudiante estudiante) {
         // la LU viene asignada (no es autogenerada): persist falla si ya existe, merge la pisaría
@@ -60,4 +60,5 @@ public class EstudianteRepositoryImpl implements EstudianteRepository{
         query.setParameter("ciudad", ciudad);
         return query.getResultList();
     }
+
 }

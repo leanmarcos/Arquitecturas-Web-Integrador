@@ -3,13 +3,14 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CarreraInscriptosResponseDTO;
+import org.example.dto.CarreraResponseDTO;
 import org.example.dto.FilaReporteDTO;
 import org.example.model.Carrera;
-
 import java.util.List;
 import java.util.Optional;
 
 public class CarreraRepositoryImpl implements CarreraRepository{
+
     @Override
     public Optional<Carrera> save(EntityManager em, Carrera carrera) {
         em.persist(carrera);
@@ -18,17 +19,23 @@ public class CarreraRepositoryImpl implements CarreraRepository{
 
     @Override
     public List<Carrera> findAll(EntityManager em) {
-        return List.of();
+        TypedQuery<Carrera> query = em.createQuery("SELECT c FROM Carrera c", Carrera.class);
+        return query.getResultList();
     }
 
     @Override
     public Optional<Carrera> findById(EntityManager em, Long id) {
-        return Optional.empty();
+        return Optional.ofNullable(em.find(Carrera.class, id));
     }
 
     @Override
     public Optional<Carrera> deleteById(EntityManager em, Long id) {
-        return Optional.empty();
+        Carrera carrera = em.find(Carrera.class, id);
+        if (carrera == null) {
+            return Optional.empty();
+        }
+        em.remove(carrera);
+        return  Optional.of(carrera);
     }
 
     @Override

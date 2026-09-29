@@ -19,11 +19,9 @@ public class Main {
         try {
             CarreraService carreraService = new CarreraService(new CarreraRepositoryImpl());
             EstudianteService estudianteService = new EstudianteService(new EstudianteRepositoryImpl());
-            EstudianteCarreraService estudianteCarreraService = new EstudianteCarreraService(
-                    new EstudianteCarreraRepositoryImpl(), estudianteService, carreraService);
+            EstudianteCarreraService estudianteCarreraService = new EstudianteCarreraService(new EstudianteCarreraRepositoryImpl(), estudianteService, carreraService);
 
-            DataResult resultado = new DataLoader(carreraService, estudianteService, estudianteCarreraService)
-                    .cargar();
+            DataResult resultado = new DataLoader(carreraService, estudianteService, estudianteCarreraService).cargar();
 
             imprimir("carreras", resultado.carreras());
             imprimir("estudiantes", resultado.estudiantes());
