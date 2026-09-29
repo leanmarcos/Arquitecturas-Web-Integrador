@@ -72,18 +72,16 @@ public class CarreraRepositoryImpl implements CarreraRepository{
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO},
-     * delegando el agrupamiento y conteo directamente al motor de base de datos.
+     * Obtiene la cantidad de inscriptos agrupados por carrera y año de inscripción.
+     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO}.
      */
     @Override
     public List<FilaReporteDTO> findInscriptosPorAnio(EntityManager em) {
         TypedQuery<FilaReporteDTO> query = em.createQuery(
                 """
                 SELECT new org.example.dto.FilaReporteDTO(c.nombre, ec.anioInscripcion, COUNT(ec))
-                FROM EstudianteCarrera ec
-                JOIN ec.carrera c
+                FROM Carrera c
+                JOIN c.estudiantes ec
                 GROUP BY c.nombre, ec.anioInscripcion
                 """, FilaReporteDTO.class
         );
@@ -91,18 +89,16 @@ public class CarreraRepositoryImpl implements CarreraRepository{
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO},
-     * filtrando únicamente aquellas inscripciones con graduación efectiva (no nula).
+     * Obtiene la cantidad de egresados agrupados por carrera y año de graduación.
+     * Utiliza constructor expression en JPQL proyectando a {@link FilaReporteDTO}.
      */
     @Override
     public List<FilaReporteDTO> findEgresadosPorAnio(EntityManager em) {
         TypedQuery<FilaReporteDTO> query = em.createQuery(
                 """
                 SELECT new org.example.dto.FilaReporteDTO(c.nombre, ec.anioGraduacion, COUNT(ec))
-                FROM EstudianteCarrera ec
-                JOIN ec.carrera c
+                FROM Carrera c
+                JOIN c.estudiantes ec
                 WHERE ec.anioGraduacion IS NOT NULL
                 GROUP BY c.nombre, ec.anioGraduacion
                 """, FilaReporteDTO.class
