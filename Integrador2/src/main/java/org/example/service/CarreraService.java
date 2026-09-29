@@ -4,8 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import lombok.AllArgsConstructor;
 import org.example.dto.CarreraInscriptosResponseDTO;
+import org.example.dto.CarreraReporteDTO;
 import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
+import org.example.dto.FilaReporteDTO;
 import org.example.exceptions.CarreraExistingException;
 import org.example.exceptions.CarreraNotFoundException;
 import org.example.exceptions.UnexpectedException;
@@ -16,7 +18,9 @@ import org.example.utils.JPAUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 @AllArgsConstructor
 public class CarreraService {
@@ -134,6 +138,68 @@ public class CarreraService {
     public List<CarreraInscriptosResponseDTO> obtenerCarrerasConCantInscriptos(){
         try (EntityManager em = JPAUtil.getEntityManager()) {
             return repository.findCarreraWithEstudiantes(em);
+        }
+    }
+
+    /**
+     * Genera un reporte cronológico y alfabético de inscriptos y egresados por carrera y por año.
+     * <p>
+     * Recupera las métricas de inscriptos y egresados desde el repositorio a través de dos
+     * consultas agregadas independientes, consolidándolas en memoria mediante un {@link TreeMap}
+     * para asegurar el ordenamiento alfabético por carrera (A-Z) y cronológico ascendente por año.
+     *
+     * @return Lista de {@link CarreraReporteDTO} con las estadísticas por carrera y año.
+     */
+    public List<CarreraReporteDTO> generarReporteCarreras() {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+            List<FilaReporteDTO> inscriptos = repository.findInscriptosPorAnio(em);
+            List<FilaReporteDTO> egresados = repository.findEgresadosPorAnio(em);
+
+            Map<CarreraReporteDTO.ClaveReporte, MetricasAnio> acumulador = new TreeMap<>();
+
+            for (FilaReporteDTO fila : inscriptos) {
+                CarreraReporteDTO.ClaveReporte clave = new CarreraReporteDTO.ClaveReporte(fila.nombreCarrera(), fila.anio());
+                acumulador.computeIfAbsent(clave, k -> new MetricasAnio()).sumarInscriptos(fila.cantidad());
+            }
+
+            for (FilaReporteDTO fila : egresados) {
+                CarreraReporteDTO.ClaveReporte clave = new CarreraReporteDTO.ClaveReporte(fila.nombreCarrera(), fila.anio());
+                acumulador.computeIfAbsent(clave, k -> new MetricasAnio()).sumarEgresados(fila.cantidad());
+            }
+
+            List<CarreraReporteDTO> resultado = new ArrayList<>();
+            acumulador.forEach((clave, metricas) -> resultado.add(new CarreraReporteDTO(
+                    clave.carrera(),
+                    clave.anio(),
+                    metricas.getInscriptos(),
+                    metricas.getEgresados()
+            )));
+
+            return resultado;
+        }
+    }
+
+    /**
+     * Estructura auxiliar para acumular inscriptos y egresados de forma fuertemente tipada.
+     */
+    private static class MetricasAnio {
+        private long inscriptos = 0L;
+        private long egresados = 0L;
+
+        public void sumarInscriptos(long cant) {
+            this.inscriptos += cant;
+        }
+
+        public void sumarEgresados(long cant) {
+            this.egresados += cant;
+        }
+
+        public long getInscriptos() {
+            return inscriptos;
+        }
+
+        public long getEgresados() {
+            return egresados;
         }
     }
 
