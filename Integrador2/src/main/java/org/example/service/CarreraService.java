@@ -168,14 +168,12 @@ public class CarreraService {
             }
 
             List<CarreraReporteDTO> resultado = new ArrayList<>();
-            for (Map.Entry<CarreraReporteDTO.ClaveReporte, MetricasAnio> entry : acumulador.entrySet()) {
-                resultado.add(new CarreraReporteDTO(
-                        entry.getKey().carrera(),
-                        entry.getKey().anio(),
-                        entry.getValue().getInscriptos(),
-                        entry.getValue().getEgresados()
-                ));
-            }
+            acumulador.forEach((clave, metricas) -> resultado.add(new CarreraReporteDTO(
+                    clave.carrera(),
+                    clave.anio(),
+                    metricas.getInscriptos(),
+                    metricas.getEgresados()
+            )));
 
             return resultado;
         }
