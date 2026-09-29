@@ -3,7 +3,8 @@ import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
 import org.example.dto.EstudianteCarreraRequestDTO;
 import org.example.dto.EstudianteCarreraResponseDTO;
-import org.example.mapper.CarreraMapper;
+import org.example.loader.DataLoader;
+import org.example.loader.DataResult;
 import org.example.model.Carrera;
 import org.example.model.Estudiante;
 import org.example.repository.CarreraRepositoryImpl;
@@ -19,9 +20,16 @@ import java.util.List;
 
 public class TestAdicionales {
     public static void main(String[] args) {
-        CarreraService car = new CarreraService(new CarreraRepositoryImpl(), new CarreraMapper());
+        CarreraService car = new CarreraService(new CarreraRepositoryImpl());
         EstudianteService est = new EstudianteService(new EstudianteRepositoryImpl());
         EstudianteCarreraService estCar = new EstudianteCarreraService(new EstudianteCarreraRepositoryImpl(), est, car);
+
+        DataResult resultado = new DataLoader(car, est, estCar)
+                .cargar();
+
+        imprimir("carreras", resultado.carreras());
+        imprimir("estudiantes", resultado.estudiantes());
+        imprimir("inscripciones", resultado.inscripciones());
 
         // Adicionales de Carrera
         TestDelete(car);
@@ -46,6 +54,7 @@ public class TestAdicionales {
       System.out.println(res.toString());
 
       Carrera carrera = TestCarreraByNombre(service, res.nombre());
+      System.out.println(carrera.getId());
 
       CarreraResponseDTO eliminada = service.delete(carrera);
 
@@ -70,11 +79,11 @@ public class TestAdicionales {
     }
 
     private static void TestGetCarreraById(CarreraService service){
-            Long id = Long.parseLong("14");
+            Long id = 5L;
 
             CarreraResponseDTO car = service.getCarreraById(id);
 
-            System.out.println(car.toString());
+            System.out.println("Carrera con ID: " + id + ": " + car.toString());
     }
 
     // ============== ESTUDIANTE ============== //
@@ -95,7 +104,16 @@ public class TestAdicionales {
 
         EstudianteCarreraResponseDTO inscripcion = service.matricularEstudianteEnCarrera(request);
 
-        System.out.println(inscripcion.toString());
+        System.out.println("Inscripción exitosa: " + inscripcion.toString());
+    }
+
+    private static void imprimir(String nombre, DataResult.Conteo conteo) {
+        System.out.printf("%s: %d cargados, %d rechazados%n",
+                nombre, conteo.cargados(), conteo.rechazados().size());
+        conteo.rechazados().forEach(rechazo ->
+                System.out.printf("  fila %d: %s%n", rechazo.fila(), rechazo.motivo()));
     }
 
 }
+
+
