@@ -18,4 +18,41 @@
 - [x] Pasar DTOs a Record
 - [ ] Hacer Implements
 - [ ] Hacer Testing
-- 
+
+---
+
+## Comprobación final
+Al ejecutar main: 
+
+### Datos iniciales
+-[x] Cargó todos los estudiantes
+-[x] Cargó todas las carreras
+-[x] Cargó todas las inscripciones
+-[x] Rechazó estudiantes con datos no válidos
+-[x] Rechazó carreras con datos no válidos
+-[x] Rechazó inscripciones con datos no válidos
+
+### Funciones de carrera
+-[x] delete
+- [x] findEntityByName
+- [x] getAll
+- [x] getCarreraById
+- [x] obtenerCarrerasConCantInscriptos
+- [x] save
+- [x] validarId
+
+### Funciones de Estudiante
+-[x] create
+- [x] findAllByCarrera
+- [x] findAllByGenero
+- [x] findAllOrderByApellido
+- [x] findByLu
+- [x] findEntityById
+
+### Funciones de inscripción (EstudianteCarrera)
+-[x] esValidacionDeUnique (método interno, no testeado manualmente)
+- [x] matricularEstudianteEnCarrera
+
+## Se agregó al proyecto
+-[ ] DER
+-[ ] Diagrama de clases
