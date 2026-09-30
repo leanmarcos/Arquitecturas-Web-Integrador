@@ -33,7 +33,7 @@ public class EstudianteRepositoryImpl implements EstudianteRepository {
     @Override
     public List<Estudiante> findAllByGenero(EntityManager em, EstudianteGenero genero) {
         TypedQuery<Estudiante> query = em.createQuery(
-                "SELECT e FROM Estudiante e WHERE e.genero = :genero", Estudiante.class
+                "SELECT e FROM Estudiante e WHERE e.genero = :genero ORDER BY e.apellido", Estudiante.class
         );
         query.setParameter("genero", genero);
         return query.getResultList();
@@ -54,6 +54,7 @@ public class EstudianteRepositoryImpl implements EstudianteRepository {
                 JOIN e.inscripciones ec
                 WHERE ec.carrera.nombre = :nombreCarrera
                 AND e.ciudadResidencia = :ciudad
+                ORDER BY e.apellido
                 """, Estudiante.class
         );
         query.setParameter("nombreCarrera", nombreCarrera);

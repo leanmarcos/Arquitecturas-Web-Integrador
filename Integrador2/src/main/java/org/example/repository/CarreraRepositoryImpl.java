@@ -71,7 +71,7 @@ public class CarreraRepositoryImpl implements CarreraRepository{
                 FROM Carrera c
                 JOIN c.estudiantes ce
                 GROUP BY c.nombre
-                ORDER BY COUNT(ce) DESC
+                ORDER BY COUNT(ce) DESC, c.nombre
                 """, CarreraInscriptosResponseDTO.class
         );
         return query.getResultList();
