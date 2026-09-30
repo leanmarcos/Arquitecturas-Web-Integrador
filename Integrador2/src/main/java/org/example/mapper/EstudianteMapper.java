@@ -7,6 +7,7 @@ import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
 
 public class EstudianteMapper {
+
     public static EstudianteResponseDTO toDto(Estudiante estudiante){
         return EstudianteResponseDTO.builder()
                 .lu(estudiante.getLu())
@@ -43,4 +44,5 @@ public class EstudianteMapper {
                 .ciudadResidencia(row.get("ciudad").trim())
                 .build();
     }
+
 }

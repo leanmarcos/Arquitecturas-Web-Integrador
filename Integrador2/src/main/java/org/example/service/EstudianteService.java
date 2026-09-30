@@ -10,12 +10,13 @@ import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
 import org.example.repository.EstudianteRepository;
 import org.example.utils.JPAUtil;
-
 import java.util.List;
 import java.util.Optional;
 
 public class EstudianteService {
+
     private final EstudianteRepository estudianteRepository;
+
     public EstudianteService (EstudianteRepository estudianteRepository){
         this.estudianteRepository = estudianteRepository;
     }

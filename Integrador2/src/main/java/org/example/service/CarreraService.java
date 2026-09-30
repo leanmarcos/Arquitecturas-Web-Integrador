@@ -47,8 +47,7 @@ public class CarreraService {
             try {
                 tx.begin();
 
-                Optional<Carrera> existente =
-                        repository.findByNombre(em, carreraDto.nombre());
+                Optional<Carrera> existente = repository.findByNombre(em, carreraDto.nombre());
 
                 if (existente.isPresent()) {
                     throw new CarreraExistingException();
@@ -65,7 +64,6 @@ public class CarreraService {
                 if (tx.isActive()) {
                     tx.rollback();
                 }
-
                 throw e;
             }
         }
@@ -75,8 +73,7 @@ public class CarreraService {
         validarId(id);
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
-            Carrera carrera = repository.findById(em, id)
-                    .orElseThrow(() -> new CarreraNotFoundException(id));
+            Carrera carrera = repository.findById(em, id).orElseThrow(() -> new CarreraNotFoundException(id));
 
             return new CarreraResponseDTO(carrera.getNombre());
         }
@@ -115,16 +112,12 @@ public class CarreraService {
                 if (tx.isActive()) {
                     tx.rollback();
                 }
-
                 throw e;
             }
         }
     }
 
-    public Carrera findEntityByName(
-            EntityManager em,
-            String nombre
-    ) {
+    public Carrera findEntityByName(EntityManager em, String nombre) {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException(
                     "El nombre de la carrera es obligatorio."

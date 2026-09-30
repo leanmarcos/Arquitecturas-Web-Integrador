@@ -20,9 +20,7 @@ public class EstudianteCarreraService {
     private final EstudianteService estudianteService;
     private final CarreraService carreraService;
 
-    public EstudianteCarreraService(EstudianteCarreraRepository ecRepository,
-                                    EstudianteService estudianteService,
-                                    CarreraService carreraService){
+    public EstudianteCarreraService(EstudianteCarreraRepository ecRepository, EstudianteService estudianteService, CarreraService carreraService){
         this.ecRepository = ecRepository;
         this.estudianteService = estudianteService;
         this.carreraService = carreraService;
@@ -40,7 +38,7 @@ public class EstudianteCarreraService {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
-        try{
+        try {
             tx.begin();
             Estudiante estudiante = estudianteService.findEntityByDni(em, inscripcionDto.dni());
             Carrera carrera = carreraService.findEntityByName(em, inscripcionDto.nombreCarrera());
@@ -56,8 +54,8 @@ public class EstudianteCarreraService {
 
             return EstudianteCarreraMapper.toDto(inscripcion);
 
-        }catch(RuntimeException e){
-            if(tx.isActive()){
+        } catch(RuntimeException e){
+            if (tx.isActive()){
                 tx.rollback();
             }
             if (esViolacionDeUnique(e)) {
