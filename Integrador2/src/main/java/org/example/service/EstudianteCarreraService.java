@@ -11,9 +11,7 @@ import org.example.model.Estudiante;
 import org.example.model.EstudianteCarrera;
 import org.example.repository.EstudianteCarreraRepository;
 import org.example.utils.JPAUtil;
-import org.hibernate.exception.ConstraintViolationException;
-
-import java.util.Optional;
+import org.example.utils.PersistenceUtils;
 
 public class EstudianteCarreraService {
     private final EstudianteCarreraRepository ecRepository;
@@ -58,27 +56,13 @@ public class EstudianteCarreraService {
             if (tx.isActive()){
                 tx.rollback();
             }
-            if (esViolacionDeUnique(e)) {
+            // la única restricción unique de la tabla es la del par estudiante-carrera
+            if (PersistenceUtils.esViolacionDeUnique(e)) {
                 throw new EstudianteCarreraExistingException();
             }
             throw e;
         }finally {
             em.close();
         }
-    }
-
-    /**
-     * Busca en la cadena de causas porque, según cómo la convierta el {@link EntityManager}, la excepción de Hibernate
-     * puede llegar envuelta en una {@code PersistenceException}. La única restricción unique de la tabla es la del
-     * par estudiante-carrera, así que con el tipo alcanza para identificarla.
-     */
-    private boolean esViolacionDeUnique(Throwable e) {
-        for (Throwable causa = e; causa != null; causa = causa.getCause()) {
-            if (causa instanceof ConstraintViolationException cve
-                    && cve.getKind() == ConstraintViolationException.ConstraintKind.UNIQUE) {
-                return true;
-            }
-        }
-        return false;
     }
 }
