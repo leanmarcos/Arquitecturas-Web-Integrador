@@ -5,11 +5,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityTransaction;
 import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
+import org.example.exceptions.EstudianteExistingException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
 import org.example.repository.EstudianteRepository;
 import org.example.utils.JPAUtil;
+import org.example.utils.PersistenceUtils;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,25 +66,33 @@ public class EstudianteService {
         }
     }
 
+    /**
+     * Da de alta un estudiante.
+     * <p>
+     * No consulta antes si la LU o el DNI ya existen: la base los rechaza (clave primaria y unique) y esa violación
+     * se traduce a {@link EstudianteExistingException}. Cualquier otro error se relanza como está.
+     */
     public EstudianteResponseDTO create(EstudianteRequestDTO estudianteDto){
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
-        try{
+        try {
             tx.begin();
             Estudiante eNuevo = EstudianteMapper.toEntity(estudianteDto);
             Estudiante eGuardado = estudianteRepository.save(em, eNuevo);
             tx.commit();
             return EstudianteMapper.toDto(eGuardado);
-        }catch(Exception e){
-            if(tx.isActive()){
+        } catch (RuntimeException e) {
+            if (tx.isActive()) {
                 tx.rollback();
             }
-            throw new RuntimeException("Error al crear el estudiante", e);
-        }finally {
+            if (PersistenceUtils.esViolacionDeUnique(e)) {
+                throw new EstudianteExistingException();
+            }
+            throw e;
+        } finally {
             em.close();
         }
-
     }
 
     Estudiante findEntityByDni(EntityManager em, Integer dni){
