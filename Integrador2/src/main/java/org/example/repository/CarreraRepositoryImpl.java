@@ -3,7 +3,6 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CarreraInscriptosResponseDTO;
-import org.example.dto.CarreraResponseDTO;
 import org.example.dto.FilaReporteDTO;
 import org.example.model.Carrera;
 import java.util.List;
