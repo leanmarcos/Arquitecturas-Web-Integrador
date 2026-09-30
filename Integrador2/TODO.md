@@ -6,7 +6,7 @@
 
 ## EstudianteCarrera
 
-- [ ] (Medio) Evaluar `@EmbeddedId` con clave compuesta (`id_estudiante`, `id_carrera`) + `@MapsId` en vez de `id` propio + unique. Lo recomendaron en clase por ser más purista; la regla de no duplicar inscripciones es la misma.
+- [x] (Medio) Evaluar `@EmbeddedId` con clave compuesta (`id_estudiante`, `id_carrera`) + `@MapsId` en vez de `id` propio + unique. Lo recomendaron en clase por ser más purista; la regla de no duplicar inscripciones es la misma.
 
 ## General
 

@@ -9,8 +9,7 @@ import org.hibernate.annotations.Check;
 import java.time.Year;
 
 @Entity()
-@Table(name = "estudiante_carrera",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"id_estudiante", "id_carrera"}))
+@Table(name = "estudiante_carrera")
 @Check(constraints =
         "((graduado = TRUE AND anio_graduacion IS NOT NULL) OR (graduado = FALSE AND anio_graduacion IS NULL))" +
         " AND (anio_graduacion IS NULL OR anio_graduacion >= anio_inscripcion)")
@@ -18,16 +17,18 @@ import java.time.Year;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EstudianteCarrera {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    /** Formada por las claves foráneas: la misma inscripción no puede repetirse. */
+    @EmbeddedId
+    private EstudianteCarreraId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_estudiante", nullable = false)
+    @MapsId("idEstudiante")
+    @JoinColumn(name = "id_estudiante")
     private Estudiante estudiante;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_carrera", nullable = false)
+    @MapsId("idCarrera")
+    @JoinColumn(name = "id_carrera")
     private Carrera carrera;
 
     @Column(name = "anio_inscripcion", nullable = false)
@@ -42,6 +43,7 @@ public class EstudianteCarrera {
     @Builder
     public EstudianteCarrera(Estudiante estudiante, Carrera carrera, Year anioInscripcion,
                              Year anioGraduacion) {
+        this.id = new EstudianteCarreraId(estudiante.getLu(), carrera.getId());
         this.estudiante = estudiante;
         this.carrera = carrera;
         this.anioInscripcion = anioInscripcion;

@@ -5,7 +5,7 @@ quedan listadas en el `DataResult` con su motivo.
 
 | id | Motivo | Regla |
 |---|---|---|
-| 82 | Repite estudiante y carrera de la fila 79 (DNI 64472668, carrera 7) | unique (`id_estudiante`, `id_carrera`) |
+| 82 | Repite estudiante y carrera de la fila 79 (DNI 64472668, carrera 7) | clave primaria (`id_estudiante`, `id_carrera`) |
 | 51 | Graduación 2023 < inscripción 2024 | constructor de `EstudianteCarreraRequestDTO` (la base lo respalda con el `@Check`) |
 | 52 | Graduación 2024 < inscripción 2025 | ídem |
 | 71 | Graduación 2022 < inscripción 2023 | ídem |

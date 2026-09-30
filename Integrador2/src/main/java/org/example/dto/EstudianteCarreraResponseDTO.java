@@ -6,7 +6,6 @@ import java.time.Year;
 
 @Builder
 public record EstudianteCarreraResponseDTO(
-        Long id,
         Long luEstudiante,
         Long idCarrera,
         String nombreCarrera,

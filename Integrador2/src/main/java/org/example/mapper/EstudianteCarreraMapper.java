@@ -14,7 +14,6 @@ public class EstudianteCarreraMapper {
 
     public static EstudianteCarreraResponseDTO toDto(EstudianteCarrera inscripcion){
         return EstudianteCarreraResponseDTO.builder()
-                .id(inscripcion.getId())
                 .luEstudiante(inscripcion.getEstudiante().getLu())
                 .idCarrera(inscripcion.getCarrera().getId())
                 .nombreCarrera(inscripcion.getCarrera().getNombre())

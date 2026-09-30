@@ -27,10 +27,10 @@ public class EstudianteCarreraService {
     /**
      * Matricula un estudiante en una carrera con los años del DTO.
      * <p>
-     * No consulta si la inscripción ya existe: de eso se encarga la restricción unique de
+     * No consulta si la inscripción ya existe: de eso se encarga la clave primaria (estudiante, carrera) de
      * {@link EstudianteCarrera}, que además evita duplicados entre dos altas simultáneas. Si la base rechaza la fila
-     * se hace rollback; una violación del unique se traduce a {@link EstudianteCarreraExistingException} y cualquier
-     * otro error se relanza como está.
+     * se hace rollback; una clave repetida se traduce a {@link EstudianteCarreraExistingException} y cualquier otro
+     * error se relanza como está.
      */
     public EstudianteCarreraResponseDTO matricularEstudianteEnCarrera(EstudianteCarreraRequestDTO inscripcionDto){
         EntityManager em = JPAUtil.getEntityManager();
@@ -56,7 +56,7 @@ public class EstudianteCarreraService {
             if (tx.isActive()){
                 tx.rollback();
             }
-            // la única restricción unique de la tabla es la del par estudiante-carrera
+            // la clave primaria (estudiante, carrera) es la única restricción unique de la tabla
             if (PersistenceUtils.esViolacionDeUnique(e)) {
                 throw new EstudianteCarreraExistingException();
             }
