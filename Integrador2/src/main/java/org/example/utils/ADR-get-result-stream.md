@@ -7,10 +7,11 @@
 criterio que [ADR-optional-find-by](ADR-optional-find-by.md): el repository informa y el service decide.
 
 ```java
-return em.createQuery("SELECT e FROM Estudiante e WHERE e.dni = :dni", Estudiante.class)
-        .setParameter("dni", dni)
-        .getResultStream()
-        .findFirst();
+TypedQuery<Estudiante> query = em.createQuery(
+        "SELECT e FROM Estudiante e WHERE e.dni = :dni", Estudiante.class
+);
+query.setParameter("dni", dni);
+return query.getResultStream().findFirst();
 ```
 
 Lo que **evitamos**: atrapar `NoResultException` para devolver `Optional.empty()`. Usa una excepción para un caso

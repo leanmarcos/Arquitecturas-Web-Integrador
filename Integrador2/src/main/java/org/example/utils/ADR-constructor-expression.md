@@ -27,11 +27,12 @@ SELECT new org.example.dto.CarreraInscriptosResponseDTO(c.nombre, COUNT(ce))
 FROM Carrera c
 JOIN c.estudiantes ce
 GROUP BY c.nombre
-ORDER BY COUNT(ce) DESC
+ORDER BY COUNT(ce) DESC, c.nombre
 ```
 
 Hibernate valida el constructor al parsear la consulta, así que un error de orden o de tipo aparece antes y no
-queda escondido en un cast. Esta consulta ya no pasa por `CarreraMapper`.
+queda escondido en un cast. Esta consulta ya no pasa por `CarreraMapper`. Las dos consultas del reporte
+(`findInscriptosPorAnio`, `findEgresadosPorAnio`) usan lo mismo con `FilaReporteDTO`.
 
 Solo aplica a proyecciones y agregados. Si la consulta devuelve una entidad, se devuelve la entidad y el service la
 mapea al DTO: así el repository no depende de los DTOs y la entidad queda gestionada por el `EntityManager`.
