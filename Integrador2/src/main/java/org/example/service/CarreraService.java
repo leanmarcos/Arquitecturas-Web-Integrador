@@ -8,6 +8,7 @@ import org.example.dto.CarreraReporteDTO;
 import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
 import org.example.dto.FilaReporteDTO;
+import org.example.exceptions.CarreraConInscriptosException;
 import org.example.exceptions.CarreraExistingException;
 import org.example.exceptions.CarreraNotFoundException;
 import org.example.exceptions.UnexpectedException;
@@ -79,14 +80,12 @@ public class CarreraService {
         }
     }
 
-    public CarreraResponseDTO delete(Carrera carrera) {
-        if (carrera == null) {
-            throw new IllegalArgumentException(
-                    "La carrera es obligatoria."
-            );
-        }
-
-        validarId(carrera.getId());
+    /**
+     * Elimina una carrera. Si tiene estudiantes inscriptos no se borra (la clave foránea de
+     * {@code estudiante_carrera} lo impediría) y se lanza {@link CarreraConInscriptosException}.
+     */
+    public CarreraResponseDTO delete(Long id) {
+        validarId(id);
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
             EntityTransaction tx = em.getTransaction();
@@ -94,14 +93,14 @@ public class CarreraService {
             try {
                 tx.begin();
 
-                repository.findById(em, carrera.getId())
-                        .orElseThrow(() ->
-                                new CarreraNotFoundException(
-                                        carrera.getId()
-                                ));
+                Carrera carrera = repository.findById(em, id)
+                        .orElseThrow(() -> new CarreraNotFoundException(id));
 
-                Carrera eliminada = repository
-                        .deleteById(em, carrera.getId())
+                if (!carrera.getEstudiantes().isEmpty()) {
+                    throw new CarreraConInscriptosException(id);
+                }
+
+                Carrera eliminada = repository.deleteById(em, id)
                         .orElseThrow(UnexpectedException::new);
 
                 tx.commit();
