@@ -20,6 +20,7 @@ public class EstudianteCarreraMapper {
                 .anioInscripcion(inscripcion.getAnioInscripcion())
                 .anioGraduacion(inscripcion.getAnioGraduacion())
                 .graduado(inscripcion.isGraduado())
+                .antiguedad(inscripcion.getAntiguedad())
                 .build();
     }
 
@@ -27,8 +28,8 @@ public class EstudianteCarreraMapper {
      * Convierte una fila de {@code estudianteCarrera.csv} en un request.
      * <p>
      * {@code id_estudiante} es el DNI del estudiante. {@code id_carrera} es el id de {@code carreras.csv}, no el de
-     * la base, por eso se traduce a nombre con {@code nombresCarreraPorIdCsv}. La columna {@code antiguedad} se
-     * ignora: se calcula a partir de los años.
+     * la base, por eso se traduce a nombre con {@code nombresCarreraPorIdCsv}. La {@code antiguedad} se carga tal
+     * como viene en el CSV.
      *
      * @param nombresCarreraPorIdCsv nombre de cada carrera según su id en {@code carreras.csv}
      */
@@ -41,6 +42,7 @@ public class EstudianteCarreraMapper {
                 .nombreCarrera(nombresCarreraPorIdCsv.get(idCarreraCsv))
                 .anioInscripcion(Year.parse(row.get("inscripcion").trim()))
                 .anioGraduacion(graduacion == SIN_GRADUACION ? null : Year.of(graduacion))
+                .antiguedad(Integer.parseInt(row.get("antiguedad").trim()))
                 .build();
     }
 }
