@@ -7,11 +7,8 @@ public class EstudianteCarreraRepositoryImpl implements EstudianteCarreraReposit
 
     @Override
     public EstudianteCarrera save(EntityManager em, EstudianteCarrera inscripcion) {
-        if (inscripcion.getId() == null) {
-            em.persist(inscripcion);
-        } else {
-            inscripcion = em.merge(inscripcion);
-        }
+        // la clave (estudiante, carrera) viene asignada: persist falla si ya existe, merge la pisaría
+        em.persist(inscripcion);
         return inscripcion;
     }
 

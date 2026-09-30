@@ -9,13 +9,15 @@ import java.time.Year;
  * {@link EstudianteCarrera}
  *
  * @param anioGraduacion {@code null} si el estudiante no se graduó
+ * @param antiguedad     {@code null} para que se calcule a partir de los años
  */
 @Builder
 public record EstudianteCarreraRequestDTO(
         Integer dni,
         String nombreCarrera,
         Year anioInscripcion,
-        Year anioGraduacion
+        Year anioGraduacion,
+        Integer antiguedad
 ) {
     public EstudianteCarreraRequestDTO {
         if (dni == null || dni <= 0) {
@@ -29,6 +31,9 @@ public record EstudianteCarreraRequestDTO(
         }
         if (anioGraduacion != null && anioGraduacion.isBefore(anioInscripcion)) {
             throw new IllegalArgumentException("El año de graduación no puede ser anterior al de inscripción.");
+        }
+        if (antiguedad != null && antiguedad < 0) {
+            throw new IllegalArgumentException("La antigüedad no puede ser negativa.");
         }
     }
 }
