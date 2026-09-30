@@ -11,11 +11,15 @@
 ## General
 
 - [ ] (Bajo) Chequear que todas las entidades se construyan con builder. Hoy `Estudiante` se arma con setters en `EstudianteMapper.toEntity`.
-- [ ] (Medio) Unificar la validación de DTOs. Los de Carrera usan anotaciones `javax.validation` que no se ejecutan (solo está la API en el pom, sin implementación ni llamada al `Validator`); los de Estudiante validan en el constructor compacto del record. Elegir uno: pasar todos al constructor compacto, o configurar Bean Validation (`jakarta.validation` + hibernate-validator) para todos.
+- [x] (Medio) Unificar la validación de DTOs. Todos los request validan en el constructor compacto del record; se sacaron las anotaciones `javax.validation` y la dependencia del pom.
+
+## Reporte (consigna 3)
+
+- [ ] (Medio) `CarreraService.generarReporteCarreras` une y ordena en Java (`TreeMap`, `ClaveReporte` con `Comparable`, `MetricasAnio`), y la consigna pide resolverlo mayormente en JPQL. Opciones: una sola consulta que ya venga ordenada (egresados por año + total de inscriptos de la carrera), o dejar las dos consultas con `ORDER BY` y unirlas con un `HashMap` simple.
 
 ## Carrera
 - [ ] (Bajo) `CarreraService.save` consulta `findByNombre` antes de insertar para detectar duplicados. Pasarlo al mismo criterio que `EstudianteCarreraService`: insertar directo y traducir la violación del unique (`ConstraintViolationException.getKind() == UNIQUE`) a `CarreraExistingException`. Ahorra una consulta y cubre dos altas simultáneas.
 - [x] Pasar DTOs a Record
-- [ ] Hacer Implements
+- [x] Hacer Implements
 - [ ] Hacer Testing
 - 
