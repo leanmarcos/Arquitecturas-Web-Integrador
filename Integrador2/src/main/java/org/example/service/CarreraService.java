@@ -125,7 +125,7 @@ public class CarreraService {
         }
 
         return repository.findByNombre(em, nombre.trim())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new CarreraNotFoundException(nombre));
     }
 
     public List<CarreraInscriptosResponseDTO> obtenerCarrerasConCantInscriptos(){

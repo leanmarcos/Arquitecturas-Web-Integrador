@@ -10,5 +10,11 @@ public class CarreraNotFoundException extends CustomException{
         );
     }
 
-
+    public CarreraNotFoundException(String nombre) {
+        super(
+                "No se encontró la carrera con nombre " + nombre,
+                404,
+                "El nombre no corresponde a ninguna carrera registrada"
+        );
+    }
 }
