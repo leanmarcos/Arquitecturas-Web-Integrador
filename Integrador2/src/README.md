@@ -23,7 +23,6 @@
 ![DER](../docs/diagrams/DER_integrador2.png)
 
 ### Modelo completo
-
 ![Modelo de dominio](../docs/diagrams/Integrador2.png)
 
 ### Modelo de dominio
