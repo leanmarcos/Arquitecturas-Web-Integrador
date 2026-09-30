@@ -13,4 +13,9 @@ public record EstudianteResponseDTO(
         EstudianteGenero genero,
         String ciudadResidencia
 ) {
+    @Override
+    public String toString() {
+        return String.format("LU %-7d | %-25s | DNI %-9d | %3d años | %-13s | %s",
+                lu, apellido + ", " + nombres, dni, edad, genero.getNombre(), ciudadResidencia);
+    }
 }

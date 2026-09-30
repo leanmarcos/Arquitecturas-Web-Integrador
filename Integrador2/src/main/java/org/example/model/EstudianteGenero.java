@@ -4,25 +4,33 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum EstudianteGenero {
-    MALE("Male", "Masculino"),
-    FEMALE("Female", "Femenino"),
-    POLYGENDER("Polygender"),
-    GENDERFLUID("Genderfluid"),
-    AGENDER("Agender"),
-    BIGENDER("Bigender"),
-    NON_BINARY("Non-binary");
+    MALE("Masculino", "Male"),
+    FEMALE("Femenino", "Female"),
+    POLYGENDER("Poligénero", "Polygender"),
+    GENDERFLUID("Género fluido", "Genderfluid"),
+    AGENDER("Agénero", "Agender"),
+    BIGENDER("Bigénero", "Bigender"),
+    NON_BINARY("No binario", "Non-binary");
 
-    private final String[] valores;
+    /** Nombre en español, el que se muestra. */
+    private final String nombre;
+    /** Nombre en inglés, como viene en el CSV. */
+    private final String nombreEnIngles;
 
-    EstudianteGenero(String... valores) {
-        this.valores = valores;
+    EstudianteGenero(String nombre, String nombreEnIngles) {
+        this.nombre = nombre;
+        this.nombreEnIngles = nombreEnIngles;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     /**
      * Convierte un texto (ej: "Female", "femenino") al género correspondiente, sin distinguir mayúsculas.
      * <p>
-     * Acepta los valores en inglés del CSV y también "Masculino" / "Femenino", así una búsqueda por
-     * "Femenino" encuentra a los estudiantes cargados como "Female".
+     * Acepta el nombre en inglés del CSV y el nombre en español, así una búsqueda por "Femenino" encuentra a los
+     * estudiantes cargados como "Female".
      *
      * @param valor texto a convertir
      * @return el género, o {@link Optional#empty()} si el texto no corresponde a ninguno
@@ -33,7 +41,8 @@ public enum EstudianteGenero {
         }
         String buscado = valor.trim();
         return Arrays.stream(values())
-                .filter(genero -> Arrays.stream(genero.valores).anyMatch(buscado::equalsIgnoreCase))
+                .filter(genero -> genero.nombre.equalsIgnoreCase(buscado)
+                        || genero.nombreEnIngles.equalsIgnoreCase(buscado))
                 .findFirst();
     }
 }

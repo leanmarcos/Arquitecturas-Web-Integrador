@@ -3,7 +3,6 @@ package org.example.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.example.dto.CarreraInscriptosResponseDTO;
-import org.example.dto.CarreraResponseDTO;
 import org.example.dto.FilaReporteDTO;
 import org.example.model.Carrera;
 import java.util.List;
@@ -72,7 +71,7 @@ public class CarreraRepositoryImpl implements CarreraRepository{
                 FROM Carrera c
                 JOIN c.estudiantes ce
                 GROUP BY c.nombre
-                ORDER BY COUNT(ce) DESC
+                ORDER BY COUNT(ce) DESC, c.nombre
                 """, CarreraInscriptosResponseDTO.class
         );
         return query.getResultList();

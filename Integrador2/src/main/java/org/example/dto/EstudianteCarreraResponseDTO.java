@@ -14,4 +14,10 @@ public record EstudianteCarreraResponseDTO(
         Year anioGraduacion,
         boolean graduado
 ) {
+    @Override
+    public String toString() {
+        String graduacion = graduado ? "graduado en " + anioGraduacion : "sin graduar";
+        return String.format("LU %d en %s | inscripto en %s | %s",
+                luEstudiante, nombreCarrera, anioInscripcion, graduacion);
+    }
 }
