@@ -60,7 +60,7 @@ public class EstudianteService {
             throw new IllegalArgumentException("La ciudad es obligatoria.");
         }
         try (EntityManager em = JPAUtil.getEntityManager()) {
-            return estudianteRepository.findAllByCarreraAndCiudad(em, nombreCarrera, ciudad.trim()).stream()
+            return estudianteRepository.findAllByCarreraAndCiudad(em, nombreCarrera.trim(), ciudad.trim()).stream()
                     .map(EstudianteMapper::toDto)
                     .toList();
         }
