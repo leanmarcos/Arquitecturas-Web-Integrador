@@ -1,11 +1,11 @@
 package org.example.service;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.EntityTransaction;
 import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.EstudianteExistingException;
+import org.example.exceptions.EstudianteNotFoundException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
@@ -30,7 +30,7 @@ public class EstudianteService {
         try (EntityManager em = JPAUtil.getEntityManager()) {
             return estudianteRepository.findByLu(em, lu)
                     .map(EstudianteMapper::toDto)
-                    .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con LU: " + lu));
+                    .orElseThrow(() -> new EstudianteNotFoundException(lu));
         }
     }
 
@@ -100,6 +100,6 @@ public class EstudianteService {
             throw new IllegalArgumentException("El DNI es obligatorio.");
         }
         return estudianteRepository.findByDni(em, dni)
-                .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con DNI: " + dni));
+                .orElseThrow(() -> new EstudianteNotFoundException(dni));
     }
 }

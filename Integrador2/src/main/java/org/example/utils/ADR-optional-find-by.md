@@ -12,7 +12,7 @@ Pero el gran beneficio no es solo avisar que puede faltar: `Optional` permite **
 ```java
 return estudianteRepository.findByLu(em, lu)
         .map(EstudianteMapper::toDto)
-        .orElseThrow(() -> new EntityNotFoundException("Estudiante no encontrado con LU: " + lu));
+        .orElseThrow(() -> new EstudianteNotFoundException(lu));
 ```
 
 Lo que **evitamos** escribir (hace lo mismo, pero con chequeo y `get()` a mano):
@@ -20,7 +20,7 @@ Lo que **evitamos** escribir (hace lo mismo, pero con chequeo y `get()` a mano):
 ```java
 Optional<Estudiante> resultado = estudianteRepository.findByLu(em, lu);
 if (resultado.isEmpty()) {
-    throw new EntityNotFoundException("Estudiante no encontrado con LU: " + lu);
+    throw new EstudianteNotFoundException(lu);
 }
 return EstudianteMapper.toDto(resultado.get());
 ```
