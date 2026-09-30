@@ -87,7 +87,7 @@ public class DataLoader {
 
     /**
      * Mensaje de la causa raíz: los services envuelven los errores de la base (ej: violación de unique), y el
-     * mensaje útil queda en la excepción más interna. Se puede simplificar cuando se resuelva el RFC-03.
+     * mensaje útil queda en la excepción más interna.
      */
     private String motivo(Throwable e) {
         Throwable causa = e;
