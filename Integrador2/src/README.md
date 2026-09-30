@@ -15,3 +15,13 @@
    inscriptos y egresados por año. Se deben ordenar las carreras alfabéticamente, y presentar
    los años de manera cronológica.
    Nota: las consultas deben ser resueltas mayormente en JPQL, y no en código Java.
+
+## Diagramas (punto 1)
+
+### DER
+
+![DER](../docs/diagrams/DER_integrador2.svg)
+
+### Modelo de dominio
+
+![Modelo de dominio](../docs/diagrams/modelo_dominio_integrador2.drawio.svg)

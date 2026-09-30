@@ -52,7 +52,7 @@ public class CarreraRepositoryImpl implements CarreraRepository{
      * <p>
      * Cuando un SELECT de JPQL trae varias columnas sueltas (c.nombre, COUNT(ce)), no hay una entidad donde
      * guardarlas. En vez de recibir cada fila como {@code Object[]}, usamos una constructor expression
-     * ({@code SELECT new ...}) para que JPA arme directamente el DTO. Ver ADR-constructor-expression.md.
+     * ({@code SELECT new ...}) para que JPA arme directamente el DTO. Ver Integrador2/docs/adr/utils/ADR-constructor-expression.md.
      * <p>
      * Cada elemento de la lista es un {@link CarreraInscriptosResponseDTO} con:
      * <ul>
