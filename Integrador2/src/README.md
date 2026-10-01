@@ -20,8 +20,10 @@
 
 ### DER
 
-![DER](../docs/diagrams/DER_integrador2.svg)
+![DER](../docs/diagrams/DER_integrador2.png)
+
+### Modelo completo
+![Modelo de dominio](../docs/diagrams/Integrador2.png)
 
 ### Modelo de dominio
-
-![Modelo de dominio](../docs/diagrams/modelo_dominio_integrador2.drawio.svg)
+![Modelo_de_dominio](../docs/diagrams/UMLdomain.png)
