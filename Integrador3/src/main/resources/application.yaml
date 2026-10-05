@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Integrador3
+  jpa:
+    hibernate:
+      ddl-auto: create

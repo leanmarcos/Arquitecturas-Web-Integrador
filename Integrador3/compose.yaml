@@ -1,0 +1,11 @@
+name: integrador3
+services:
+  mysql:
+    image: 'mysql:latest'
+    environment:
+      - 'MYSQL_DATABASE=tudai-tp3'
+      - 'MYSQL_PASSWORD=tudai'
+      - 'MYSQL_ROOT_PASSWORD=tudai'
+      - 'MYSQL_USER=tudai'
+    ports:
+      - '3307:3306'
