@@ -1,22 +1,20 @@
 package org.example.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public abstract class CustomException extends RuntimeException {
 
-    private final Integer errorCode;
-    private final String errorDescription;
+    private final ExceptionCode exceptionCode;
 
-    protected CustomException(String message, Integer errorCode, String errorDescription) {
+    protected CustomException(String message, ExceptionCode exceptionCode){
         super(message);
-        this.errorCode = errorCode;
-        this.errorDescription = errorDescription;
+        this.exceptionCode = exceptionCode;
     }
 
-    public Integer getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorDescription() {
-        return errorDescription;
+    protected CustomException(String message, ExceptionCode exceptionCode, Throwable cause){
+        super(message, cause);
+        this.exceptionCode = exceptionCode;
     }
 
 }

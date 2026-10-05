@@ -1,20 +1,12 @@
 package org.example.exceptions;
 
-public class CarreraNotFoundException extends CustomException{
+public class CarreraNotFoundException extends CustomException {
 
     public CarreraNotFoundException(Long id) {
-        super(
-                "No se encontró la carrera con id " + id,
-                404,
-                "El número de id no corresponde a ninguna carrera registrada"
-        );
+        super(String.format("No se encontró la carrera con id %d", id), ExceptionCode.MAJOR_NOT_FOUND);
     }
 
     public CarreraNotFoundException(String nombre) {
-        super(
-                "No se encontró la carrera con nombre " + nombre,
-                404,
-                "El nombre no corresponde a ninguna carrera registrada"
-        );
+        super(String.format("No se encontró la carrera con nombre %s", nombre), ExceptionCode.MAJOR_NOT_FOUND);
     }
 }

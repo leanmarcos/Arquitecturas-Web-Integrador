@@ -1,11 +1,8 @@
 package org.example.exceptions;
 
 public class CarreraExistingException extends CustomException {
-    public CarreraExistingException(){
-        super(
-                "Carrera igual existente",
-                400,
-                "Ya existe una carrera con esas características"
-        );
+
+    public CarreraExistingException(String nombre) {
+        super(String.format("Ya existe una carrera con nombre %s", nombre), ExceptionCode.MAJOR_NAME_DUPLICATED);
     }
 }
