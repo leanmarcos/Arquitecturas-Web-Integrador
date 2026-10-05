@@ -1,11 +1,11 @@
 package org.example.exceptions;
 
 public class EstudianteCarreraExistingException extends CustomException {
-    public EstudianteCarreraExistingException() {
+
+    public EstudianteCarreraExistingException(Integer dni, String nombreCarrera) {
         super(
-                "El estudiante ya está inscripto en esta carrera.",
-                400,
-                "Ya existe una inscripción del estudiante en la carrera"
+                String.format("El estudiante con DNI: %d ya está inscripto en la carrera %s", dni, nombreCarrera),
+                ExceptionCode.ENROLLMENT_DUPLICATED
         );
     }
 }

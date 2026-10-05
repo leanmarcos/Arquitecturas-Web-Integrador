@@ -1,11 +1,12 @@
 package org.example.exceptions;
 
 public class EstudianteExistingException extends CustomException {
-    public EstudianteExistingException() {
-        super(
-                "Ya existe un estudiante con esa LU o DNI.",
-                400,
-                "La LU y el DNI no pueden repetirse entre estudiantes"
-        );
+
+    public EstudianteExistingException(Long lu) {
+        super(String.format("Ya existe un estudiante con LU %d", lu), ExceptionCode.STUDENT_NUMBER_DUPLICATED);
+    }
+
+    public EstudianteExistingException(Integer dni) {
+        super(String.format("Ya existe un estudiante con DNI %d", dni), ExceptionCode.STUDENT_DOCUMENT_DUPLICATED);
     }
 }
