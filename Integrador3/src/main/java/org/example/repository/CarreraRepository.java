@@ -1,7 +1,7 @@
 package org.example.repository;
 
-import org.springframework.stereotype.Repository;
+import org.example.model.Carrera;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository("CarreraRepositorio")
-public interface CarreraRepository extends RepositorioBase{
+public interface CarreraRepository extends JpaRepository<Carrera, Long> {
 }
