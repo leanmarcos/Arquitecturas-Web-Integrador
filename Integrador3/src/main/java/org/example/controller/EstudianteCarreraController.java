@@ -1,12 +1,12 @@
 package org.example.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.service.EstudianteCarreraService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 @Controller
+@RequiredArgsConstructor
 public class EstudianteCarreraController {
 
-    @Autowired
-    private EstudianteCarreraService service;
+    private final EstudianteCarreraService service;
 }
