@@ -3,6 +3,7 @@ package org.example.dto;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import org.example.model.EstudianteCarrera;
@@ -10,13 +11,17 @@ import org.example.model.EstudianteCarrera;
 import java.time.Year;
 
 /**
- * {@link EstudianteCarrera}. El estudiante no viaja en el body: se toma del DNI del path.
+ * {@link EstudianteCarrera}
  *
  * @param anioGraduacion {@code null} si el estudiante no se graduó
  * @param antiguedad     {@code null} para que se calcule a partir de los años
  */
 @Builder
 public record EstudianteCarreraRequestDTO(
+        @NotNull(message = "El DNI del estudiante es obligatorio")
+        @Positive(message = "El DNI debe ser un número positivo")
+        Integer dni,
+
         @NotBlank(message = "El nombre de la carrera es obligatorio")
         String nombreCarrera,
 
