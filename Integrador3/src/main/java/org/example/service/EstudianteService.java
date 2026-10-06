@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.DocumentException;
+import org.example.exceptions.EstudianteNotFoundException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
 import org.example.repository.EstudianteRepository;
@@ -22,5 +23,10 @@ public class EstudianteService {
         }
         Estudiante e = mapper.toEntity(request);
         return mapper.toDto(repository.save(e));
+    }
+
+    public Estudiante findEntityByDni(Integer dni){
+        return repository.findByDni(dni)
+                .orElseThrow(() -> new EstudianteNotFoundException(dni));
     }
 }
