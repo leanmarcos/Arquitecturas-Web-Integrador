@@ -11,4 +11,8 @@ import java.time.Year;
  * @param cantidad Cantidad total de estudiantes asociados.
  */
 public record FilaReporteDTO(String nombreCarrera, Year anio, Long cantidad) {
+
+    public ClaveReporte clave() {
+        return new ClaveReporte(nombreCarrera, anio);
+    }
 }

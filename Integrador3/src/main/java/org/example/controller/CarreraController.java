@@ -3,6 +3,7 @@ package org.example.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.CarreraInscriptosResponseDTO;
+import org.example.dto.CarreraReporteDTO;
 import org.example.dto.CarreraRequestDTO;
 import org.example.dto.CarreraResponseDTO;
 import org.example.service.CarreraService;
@@ -32,5 +33,10 @@ public class CarreraController {
     @GetMapping("/con-inscriptos")
     public ResponseEntity<List<CarreraInscriptosResponseDTO>> findAllOrderedByInscriptos(){
         return ResponseEntity.ok(service.findAllOrderedByInscriptos());
+    }
+
+    @GetMapping("/reporte")
+    public ResponseEntity<List<CarreraReporteDTO>> generateReport(){
+        return ResponseEntity.ok(service.generateReport());
     }
 }

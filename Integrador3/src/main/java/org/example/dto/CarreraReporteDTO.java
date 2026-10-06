@@ -14,20 +14,4 @@ import java.time.Year;
  */
 @Builder
 public record CarreraReporteDTO(String nombreCarrera, Year anio, Long inscriptos, Long egresados) {
-
-    /**
-     * Clave compuesta (carrera y año) utilizada para agrupar y ordenar naturalmente el reporte:
-     * alfabéticamente por nombre de carrera (A-Z) y cronológicamente ascendente por año.
-     *
-     * @param carrera Nombre de la carrera.
-     * @param anio Año evaluado.
-     */
-    public record ClaveReporte(String carrera, Year anio) implements Comparable<ClaveReporte> {
-        @Override
-        public int compareTo(ClaveReporte o) {
-            int cmp = this.carrera.compareToIgnoreCase(o.carrera);
-            if (cmp != 0) return cmp;
-            return this.anio.compareTo(o.anio);
-        }
-    }
 }
