@@ -18,3 +18,11 @@ Tome como punto de partida el ejercicio integrador del TP2
    presentar los años de manera cronológica.
 
 3) Testear la invocación a los servicios REST mediante Postman, o cliente similar
+
+## Ver el reporte en el navegador
+
+Levantar la aplicación (`SistemaUniversitario`) y abrir **http://localhost:8080/**. Spring Boot sirve el backend y
+`index.html` (en `src/main/resources/static`) desde el mismo puerto, así la página consulta `/carreras/reporte` y muestra
+la tabla de inscriptos y egresados por año de cada carrera.
+
+No abrir el `index.html` desde IntelliJ (puerto 63342): ahí no corre el backend y el reporte da 404.
