@@ -74,7 +74,6 @@ public class DataLoader implements CommandLineRunner {
         Map<Long, String> nombresCarreraPorIdCsv = obtenerNombresCarreraPorIdCsv();
         Conteo inscripciones = cargarFilas(INSCRIPCIONES_CSV,
                 row -> estudianteCarreraService.matricular(
-                        Integer.parseInt(row.get("id_estudiante").trim()),
                         validar(estudianteCarreraMapper.fromCsv(row, nombresCarreraPorIdCsv))));
 
         return new DataResult(carreras, estudiantes, inscripciones);

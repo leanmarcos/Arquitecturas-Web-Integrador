@@ -3,12 +3,15 @@ package org.example.mapper;
 import org.apache.commons.csv.CSVRecord;
 import org.example.dto.EstudianteCarreraRequestDTO;
 import org.example.dto.EstudianteCarreraResponseDTO;
+import org.example.dto.EstudianteResponseDTO;
+import org.example.dto.EstudiantesPorCarreraResponseDTO;
 import org.example.model.Carrera;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteCarrera;
 import org.springframework.stereotype.Component;
 
 import java.time.Year;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -39,10 +42,8 @@ public class EstudianteCarreraMapper {
     }
 
     /**
-     * Convierte una fila de {@code estudianteCarrera.csv} en un request. El DNI ({@code id_estudiante}) no forma
-     * parte del request, lo lee quien llama.
-     * <p>
-     * {@code id_carrera} es el id de {@code carreras.csv}, no el de la base, por eso se traduce a nombre con
+     * Convierte una fila de {@code estudianteCarrera.csv} en un request. {@code id_estudiante} es el DNI del
+     * estudiante; {@code id_carrera} es el id de {@code carreras.csv}, no el de la base, por eso se traduce a nombre con
      * {@code nombresCarreraPorIdCsv}. La {@code antiguedad} se carga tal como viene en el CSV.
      *
      * @param nombresCarreraPorIdCsv nombre de cada carrera según su id en {@code carreras.csv}
@@ -52,10 +53,22 @@ public class EstudianteCarreraMapper {
         int graduacion = Integer.parseInt(row.get("graduacion").trim());
 
         return EstudianteCarreraRequestDTO.builder()
+                .dni(Integer.parseInt(row.get("id_estudiante").trim()))
                 .nombreCarrera(nombresCarreraPorIdCsv.get(idCarreraCsv))
                 .anioInscripcion(Year.parse(row.get("inscripcion").trim()))
                 .anioGraduacion(graduacion == SIN_GRADUACION ? null : Year.of(graduacion))
                 .antiguedad(Integer.parseInt(row.get("antiguedad").trim()))
+                .build();
+    }
+
+    public EstudiantesPorCarreraResponseDTO toDto(
+            List<EstudianteResponseDTO> estudiantes,
+            String nombreCarrera,
+            String ciudadResidencia){
+        return EstudiantesPorCarreraResponseDTO.builder()
+                .carrera(nombreCarrera)
+                .ciudad(ciudadResidencia)
+                .estudiantes(estudiantes)
                 .build();
     }
 }
