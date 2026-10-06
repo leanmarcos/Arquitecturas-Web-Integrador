@@ -38,4 +38,10 @@ public class EstudianteService {
                 .map(mapper::toDto)
                 .toList();
     }
+
+    public EstudianteResponseDTO findEstudianteByLu(Long lu) {
+        return repository.findByLu(lu)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new EstudianteNotFoundException(lu));
+    }
 }
