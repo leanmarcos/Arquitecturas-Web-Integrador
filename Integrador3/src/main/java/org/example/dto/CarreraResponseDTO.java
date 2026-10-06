@@ -3,5 +3,5 @@ package org.example.dto;
 import lombok.Builder;
 
 @Builder
-public record CarreraResponseDTO(String nombre) {
+public record CarreraResponseDTO(String nombre, Integer duracion) {
 }

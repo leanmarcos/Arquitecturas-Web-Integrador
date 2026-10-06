@@ -23,16 +23,15 @@ public class EstudianteMapper {
     }
 
     public Estudiante toEntity(EstudianteRequestDTO estudianteDto){
-        Estudiante e = new Estudiante();
-        e.setLu(estudianteDto.lu());
-        e.setDni(estudianteDto.dni());
-        e.setNombres(estudianteDto.nombres());
-        e.setApellido(estudianteDto.apellido());
-        e.setEdad(estudianteDto.edad());
-        // el DTO ya validó que el género exista
-        e.setGenero(EstudianteGenero.from(estudianteDto.genero()).orElseThrow());
-        e.setCiudadResidencia(estudianteDto.ciudadResidencia());
-        return e;
+        return Estudiante.builder()
+                .lu(estudianteDto.lu())
+                .dni(estudianteDto.dni())
+                .nombres(estudianteDto.nombres().trim())
+                .apellido(estudianteDto.apellido().trim())
+                .edad(estudianteDto.edad())
+                .genero(EstudianteGenero.from(estudianteDto.genero()).orElseThrow())
+                .ciudadResidencia(estudianteDto.ciudadResidencia().trim())
+                .build();
     }
 
     public EstudianteRequestDTO fromCsv(CSVRecord row){
