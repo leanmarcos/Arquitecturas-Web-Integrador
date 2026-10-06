@@ -8,7 +8,10 @@ import org.example.exceptions.EstudianteNotFoundException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
 import org.example.repository.EstudianteRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +31,11 @@ public class EstudianteService {
     public Estudiante findEntityByDni(Integer dni){
         return repository.findByDni(dni)
                 .orElseThrow(() -> new EstudianteNotFoundException(dni));
+    }
+
+    public List<EstudianteResponseDTO> searchEstudiantes(Sort sort) {
+        return repository.findAll(sort).stream()
+                .map(mapper::toDto)
+                .toList();
     }
 }
