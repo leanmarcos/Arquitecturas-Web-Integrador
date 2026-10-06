@@ -25,8 +25,8 @@ public class CarreraService {
         return mapper.toDto(repository.save(carrera));
     }
 
-    public Carrera findEntityById(Long id){
-        return repository.findById(id)
-                .orElseThrow(() -> new CarreraNotFoundException(id));
+    public Carrera findEntityByNombre(String nombre){
+        return repository.findByNombre(nombre.trim())
+                .orElseThrow(() -> new CarreraNotFoundException(nombre));
     }
 }
