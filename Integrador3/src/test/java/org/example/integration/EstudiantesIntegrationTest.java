@@ -78,6 +78,33 @@ class EstudiantesIntegrationTest {
                 .andExpect(jsonPath("$[2].apellido").value("Gomez"));
     }
 
+    @Test
+    void findByLu_existingLu_returnsEstudiante() throws Exception {
+        // When: se pide un estudiante cargado en el Given
+        mockMvc.perform(get("/estudiantes/{lu}", 20311L))
+
+        // Then: devuelve ese estudiante y no otro
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.lu").value(20311))
+                .andExpect(jsonPath("$.dni").value(40123456))
+                .andExpect(jsonPath("$.nombres").value("Martín"))
+                .andExpect(jsonPath("$.apellido").value("Gomez"))
+                .andExpect(jsonPath("$.edad").value(25))
+                .andExpect(jsonPath("$.ciudadResidencia").value("Azul"));
+    }
+
+    @Test
+    void findByLu_nonExistingLu_returnsNotFound() throws Exception {
+        // When: se pide una LU que no está en la base
+        mockMvc.perform(get("/estudiantes/{lu}", 99999L))
+
+        // Then: 404 con el ErrorDto que arma el GlobalExceptionHandler
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("student_not_found"))
+                .andExpect(jsonPath("$.message").value("No se encontró el estudiante con LU 99999"))
+                .andExpect(jsonPath("$.status").value(404));
+    }
+
     private Estudiante createEstudiante(Long lu, Integer dni, String nombres, String apellido, Integer edad,
                                         EstudianteGenero genero, String ciudadResidencia) {
         return Estudiante.builder()
