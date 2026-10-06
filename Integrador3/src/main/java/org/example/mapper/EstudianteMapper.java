@@ -5,10 +5,12 @@ import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EstudianteMapper {
 
-    public static EstudianteResponseDTO toDto(Estudiante estudiante){
+    public EstudianteResponseDTO toDto(Estudiante estudiante){
         return EstudianteResponseDTO.builder()
                 .lu(estudiante.getLu())
                 .dni(estudiante.getDni())
@@ -20,7 +22,7 @@ public class EstudianteMapper {
                 .build();
     }
 
-    public static Estudiante toEntity(EstudianteRequestDTO estudianteDto){
+    public Estudiante toEntity(EstudianteRequestDTO estudianteDto){
         Estudiante e = new Estudiante();
         e.setLu(estudianteDto.lu());
         e.setDni(estudianteDto.dni());
@@ -33,7 +35,7 @@ public class EstudianteMapper {
         return e;
     }
 
-    public static EstudianteRequestDTO fromCsv(CSVRecord row){
+    public EstudianteRequestDTO fromCsv(CSVRecord row){
         return EstudianteRequestDTO.builder()
                 .lu(Long.parseLong(row.get("LU").trim()))
                 .dni(Integer.parseInt(row.get("DNI").trim()))
