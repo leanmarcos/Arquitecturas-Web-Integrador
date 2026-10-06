@@ -16,6 +16,7 @@ import org.example.service.EstudianteCarreraService;
 import org.example.service.EstudianteService;
 import org.example.utils.CsvImporter;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,12 +33,15 @@ import java.util.stream.Collectors;
  * <p>
  * {@code CommandLineRunner} es el que hace que se ejecute la clase a darle run al programa
  * <p>
+ * {@code @Profile("!test")} apaga la clase en los tests, así cada test arranca solo con los datos que carga él.
+ * <p>
  * Si una fila es inválida o el service la rechaza (ej: inscripción duplicada), se registra el motivo en el
  * {@link DataResult} y se sigue con la siguiente sin perder lo ya cargado.
  */
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Profile("!test")
 public class DataLoader implements CommandLineRunner {
 
     private static final String ESTUDIANTES_CSV = "/data/estudiantes.csv";
