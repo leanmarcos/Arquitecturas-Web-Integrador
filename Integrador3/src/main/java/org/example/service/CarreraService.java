@@ -25,7 +25,8 @@ public class CarreraService {
         return mapper.toDto(repository.save(carrera));
     }
 
-    public Carrera findEntityByNombre(String nombre){
+    // Devuelve la entidad, no el DTO: es de paquete para que solo la usen otros services (ej: EstudianteCarreraService)
+    Carrera findEntityByNombre(String nombre){
         return repository.findByNombre(nombre.trim())
                 .orElseThrow(() -> new CarreraNotFoundException(nombre));
     }
