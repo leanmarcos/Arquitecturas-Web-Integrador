@@ -28,7 +28,8 @@ public class EstudianteService {
         return mapper.toDto(repository.save(e));
     }
 
-    public Estudiante findEntityByDni(Integer dni){
+    // Devuelve la entidad, no el DTO: es de paquete para que solo la usen otros services (ej: EstudianteCarreraService)
+    Estudiante findEntityByDni(Integer dni){
         return repository.findByDni(dni)
                 .orElseThrow(() -> new EstudianteNotFoundException(dni));
     }
