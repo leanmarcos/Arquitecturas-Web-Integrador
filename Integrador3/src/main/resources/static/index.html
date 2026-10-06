@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Integrador 3 - Sistema universitario</title>
+    <style>
+        body { font-family: sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; margin-bottom: 1.5rem; }
+        th, td { border: 1px solid #ccc; padding: 0.3rem 1rem; text-align: right; }
+        th { background: #eee; }
+        #reporte { display: flex; flex-wrap: wrap; gap: 2rem; }
+    </style>
+</head>
+<body>
+
+<section>
+    <h1>3)</h1>
+    <p>
+        Generar un reporte de las carreras, que para cada carrera incluya información de los inscriptos y egresados
+        por año. Se deben ordenar las carreras alfabéticamente, y presentar los años de manera cronológica.
+    </p>
+    <div id="reporte">Cargando...</div>
+</section>
+
+<script>
+    async function cargarReporte() {
+        const contenedor = document.getElementById("reporte");
+
+        const response = await fetch("/carreras/reporte");
+        if (!response.ok) {
+            contenedor.textContent = `No se pudo obtener el reporte (${response.status})`;
+            return;
+        }
+        const filas = await response.json();
+
+        if (filas.length === 0) {
+            contenedor.textContent = "No hay inscripciones para mostrar.";
+            return;
+        }
+
+        let html = "";
+        let carreraActual = null;
+        for (const fila of filas) {
+            if (fila.nombreCarrera !== carreraActual) {
+                if (carreraActual !== null) {
+                    html += `</table></div>`;
+                }
+                carreraActual = fila.nombreCarrera;
+                html += `
+                    <div class="carrera">
+                        <h2>Carrera: ${carreraActual}</h2>
+                        <table>
+                            <tr><th>AÑO</th><th>INSCRIPTOS</th><th>EGRESADOS</th></tr>`;
+            }
+            html += `<tr><td>${fila.anio}</td><td>${fila.inscriptos}</td><td>${fila.egresados}</td></tr>`;
+        }
+        html += `</table></div>`;
+
+        contenedor.innerHTML = html;
+    }
+
+    cargarReporte();
+</script>
+
+</body>
+</html>
