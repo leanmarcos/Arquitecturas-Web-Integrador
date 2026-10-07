@@ -45,20 +45,16 @@ public class EstudianteCarrera {
     @Column(name = "antiguedad", nullable = false)
     private Integer antiguedad;
 
-    /**
-     * @param antiguedad años en la carrera; si es {@code null} se calcula hasta la graduación o, si no se graduó,
-     *                   hasta el año actual
-     */
+    /** La antigüedad no se recibe: se calcula hasta la graduación o, si no se graduó, hasta el año actual. */
     @Builder
-    public EstudianteCarrera(Estudiante estudiante, Carrera carrera, Year anioInscripcion,
-                             Year anioGraduacion, Integer antiguedad) {
+    public EstudianteCarrera(Estudiante estudiante, Carrera carrera, Year anioInscripcion, Year anioGraduacion) {
         this.id = new EstudianteCarreraId(estudiante.getLu(), carrera.getId());
         this.estudiante = estudiante;
         this.carrera = carrera;
         this.anioInscripcion = anioInscripcion;
         this.anioGraduacion = anioGraduacion;
         this.graduado = anioGraduacion != null;
-        this.antiguedad = antiguedad != null ? antiguedad : calcularAntiguedad();
+        this.antiguedad = calcularAntiguedad();
     }
 
     private int calcularAntiguedad() {
