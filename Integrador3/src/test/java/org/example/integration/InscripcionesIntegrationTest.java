@@ -43,7 +43,7 @@ class InscripcionesIntegrationTest {
     private EstudianteCarreraRepository estudianteCarreraRepository;
 
     /**
-     * Given de todos los tests. En TUDAI y Rauch hay 3 estudiantes, guardados en un orden distinto al esperado
+     * Arrange de todos los tests. En TUDAI y Rauch hay 3 estudiantes, guardados en un orden distinto al esperado
      * (apellido y después nombres). Además hay uno de TUDAI en otra ciudad y uno de Rauch en otra carrera, que no
      * tienen que aparecer.
      */
@@ -62,12 +62,12 @@ class InscripcionesIntegrationTest {
 
     @Test
     void findByCarreraAndCiudad_returnsOnlyMatchingEstudiantes() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "TUDAI")
                         .param("ciudad", "Rauch"))
 
-        // Then: solo los 3 de TUDAI que viven en Rauch, sin Gomez (Tandil) ni Perez (Abogacia)
+        // Assert: solo los 3 de TUDAI que viven en Rauch, sin Gomez (Tandil) ni Perez (Abogacia)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.carrera").value("TUDAI"))
                 .andExpect(jsonPath("$.ciudad").value("Rauch"))
@@ -78,12 +78,12 @@ class InscripcionesIntegrationTest {
 
     @Test
     void findByCarreraAndCiudad_ordersByApellidoAndNombres() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "TUDAI")
                         .param("ciudad", "Rauch"))
 
-        // Then: por apellido; las dos Alvarez se desempatan por nombre
+        // Assert: por apellido; las dos Alvarez se desempatan por nombre
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estudiantes[0].apellido").value("Alvarez"))
                 .andExpect(jsonPath("$.estudiantes[0].nombres").value("Ana"))
@@ -94,12 +94,12 @@ class InscripcionesIntegrationTest {
 
     @Test
     void findByCarreraAndCiudad_withoutEstudiantes_returnsEmptyList() throws Exception {
-        // When: la carrera existe, pero nadie de TUDAI vive en Azul
+        // Act: la carrera existe, pero nadie de TUDAI vive en Azul
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "TUDAI")
                         .param("ciudad", "Azul"))
 
-        // Then: 200 con la lista vacía, no 404
+        // Assert: 200 con la lista vacía, no 404
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.carrera").value("TUDAI"))
                 .andExpect(jsonPath("$.ciudad").value("Azul"))
@@ -108,12 +108,12 @@ class InscripcionesIntegrationTest {
 
     @Test
     void findByCarreraAndCiudad_nonExistingCarrera_returnsNotFound() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "Medicina")
                         .param("ciudad", "Rauch"))
 
-        // Then: 404 con el ErrorDto de la carrera
+        // Assert: 404 con el ErrorDto de la carrera
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("major_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró la carrera con nombre Medicina"));
@@ -121,11 +121,11 @@ class InscripcionesIntegrationTest {
 
     @Test
     void findByCarreraAndCiudad_withoutCiudad_returnsBadRequest() throws Exception {
-        // When: falta la ciudad, que es obligatoria y no tiene valor por defecto
+        // Act: falta la ciudad, que es obligatoria y no tiene valor por defecto
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "TUDAI"))
 
-        // Then: 400 indicando qué parámetro falta
+        // Assert: 400 indicando qué parámetro falta
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("invalid_parameter"))
                 .andExpect(jsonPath("$.message").value("Falta el parámetro obligatorio 'ciudad'"));
@@ -133,7 +133,7 @@ class InscripcionesIntegrationTest {
 
     @Test
     void matricular_validRequest_returnsCreatedAndPersists() throws Exception {
-        // When: Gomez (Tandil, TUDAI) se inscribe también en Abogacia, ya graduado
+        // Act: Gomez (Tandil, TUDAI) se inscribe también en Abogacia, ya graduado
         mockMvc.perform(post("/inscripciones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -145,14 +145,14 @@ class InscripcionesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 201 con la inscripción; sin antigüedad en el request, se calcula con los años
+        // Assert: 201 con la inscripción; sin antigüedad en el request, se calcula con los años
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.luEstudiante").value(48810))
                 .andExpect(jsonPath("$.nombreCarrera").value("Abogacia"))
                 .andExpect(jsonPath("$.graduado").value(true))
                 .andExpect(jsonPath("$.antiguedad").value(4));
 
-        // Then: ahora aparece entre los estudiantes de Abogacia en Tandil
+        // Assert: ahora aparece entre los estudiantes de Abogacia en Tandil
         mockMvc.perform(get("/inscripciones")
                         .param("carrera", "Abogacia")
                         .param("ciudad", "Tandil"))
@@ -163,7 +163,7 @@ class InscripcionesIntegrationTest {
 
     @Test
     void matricular_alreadyEnrolled_returnsConflict() throws Exception {
-        // When: Gomez ya está inscripto en TUDAI
+        // Act: Gomez ya está inscripto en TUDAI
         mockMvc.perform(post("/inscripciones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -174,7 +174,7 @@ class InscripcionesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 409, no se pisa la inscripción que ya tenía
+        // Assert: 409, no se pisa la inscripción que ya tenía
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").value("enrollment_duplicated"))
                 .andExpect(jsonPath("$.message")
@@ -183,7 +183,7 @@ class InscripcionesIntegrationTest {
 
     @Test
     void matricular_nonExistingEstudiante_returnsNotFound() throws Exception {
-        // When
+        // Act
         mockMvc.perform(post("/inscripciones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -194,7 +194,7 @@ class InscripcionesIntegrationTest {
                                 }
                                 """))
 
-        // Then
+        // Assert
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("student_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró el estudiante con DNI 11111111"));
@@ -202,7 +202,7 @@ class InscripcionesIntegrationTest {
 
     @Test
     void matricular_nonExistingCarrera_returnsNotFound() throws Exception {
-        // When
+        // Act
         mockMvc.perform(post("/inscripciones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -213,7 +213,7 @@ class InscripcionesIntegrationTest {
                                 }
                                 """))
 
-        // Then
+        // Assert
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("major_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró la carrera con nombre Medicina"));
@@ -221,7 +221,7 @@ class InscripcionesIntegrationTest {
 
     @Test
     void matricular_graduacionBeforeInscripcion_returnsBadRequest() throws Exception {
-        // When: se gradúa antes de inscribirse
+        // Act: se gradúa antes de inscribirse
         mockMvc.perform(post("/inscripciones")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -233,7 +233,7 @@ class InscripcionesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 400 con el campo que falló en el detail
+        // Assert: 400 con el campo que falló en el detail
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("validation_error"))
                 .andExpect(jsonPath("$.detail.graduacionValida")

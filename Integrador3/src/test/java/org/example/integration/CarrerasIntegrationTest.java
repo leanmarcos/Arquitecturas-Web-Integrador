@@ -41,7 +41,7 @@ class CarrerasIntegrationTest {
     private EstudianteCarreraRepository estudianteCarreraRepository;
 
     /**
-     * Given de todos los tests. Inscriptos por carrera:
+     * Arrange de todos los tests. Inscriptos por carrera:
      * <ul>
      *     <li>TUDAI: 3</li>
      *     <li>Medicina: 2 y Arquitectura: 2 (empatan, se desempata por nombre)</li>
@@ -78,10 +78,10 @@ class CarrerasIntegrationTest {
 
     @Test
     void findWithInscriptos_returnsOrderedByInscriptosDesc() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/con-inscriptos"))
 
-        // Then: de más a menos inscriptos, con la cantidad de cada una
+        // Assert: de más a menos inscriptos, con la cantidad de cada una
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nombre").value("TUDAI"))
                 .andExpect(jsonPath("$[0].totalInscriptos").value(3))
@@ -93,10 +93,10 @@ class CarrerasIntegrationTest {
 
     @Test
     void findWithInscriptos_sameInscriptos_ordersByNombre() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/con-inscriptos"))
 
-        // Then: Medicina se guardó antes, pero Arquitectura va primero por nombre
+        // Assert: Medicina se guardó antes, pero Arquitectura va primero por nombre
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[1].nombre").value("Arquitectura"))
                 .andExpect(jsonPath("$[2].nombre").value("Medicina"));
@@ -104,10 +104,10 @@ class CarrerasIntegrationTest {
 
     @Test
     void findWithInscriptos_excludesCarrerasWithoutInscriptos() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/con-inscriptos"))
 
-        // Then: son 5 carreras, pero Ingenieria no tiene inscriptos
+        // Assert: son 5 carreras, pero Ingenieria no tiene inscriptos
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[?(@.nombre == 'Ingenieria')]").isEmpty());
@@ -115,13 +115,13 @@ class CarrerasIntegrationTest {
 
     @Test
     void findWithInscriptos_withoutInscripciones_returnsEmptyList() throws Exception {
-        // Given: las carreras siguen existiendo, pero nadie está inscripto
+        // Arrange: las carreras siguen existiendo, pero nadie está inscripto
         estudianteCarreraRepository.deleteAll();
 
-        // When
+        // Act
         mockMvc.perform(get("/carreras/con-inscriptos"))
 
-        // Then: 200 con lista vacía, no 404
+        // Assert: 200 con lista vacía, no 404
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
