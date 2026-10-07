@@ -41,7 +41,7 @@ class CarrerasReporteIntegrationTest {
     private EstudianteCarreraRepository estudianteCarreraRepository;
 
     /**
-     * Given de todos los tests. Inscripciones:
+     * Arrange de todos los tests. Inscripciones:
      * <ul>
      *     <li>TUDAI: Zapata 2020 → 2022, Alvarez 2020 sin graduarse, Gomez 2022 → 2024</li>
      *     <li>Abogacia: Perez 2021 sin graduarse</li>
@@ -73,10 +73,10 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_ordersByCarreraAndAnio() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: carreras de la A a la Z y, dentro de cada una, años ascendentes
+        // Assert: carreras de la A a la Z y, dentro de cada una, años ascendentes
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[0].nombreCarrera").value("Abogacia"))
@@ -91,10 +91,10 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_sameYear_combinesInscriptosAndEgresados() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: TUDAI 2022 tiene un inscripto (Gomez) y un egresado (Zapata) en la misma fila
+        // Assert: TUDAI 2022 tiene un inscripto (Gomez) y un egresado (Zapata) en la misma fila
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[2].nombreCarrera").value("TUDAI"))
                 .andExpect(jsonPath("$[2].anio").value(2022))
@@ -104,10 +104,10 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_yearWithOnlyInscriptos_hasZeroEgresados() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: en TUDAI 2020 se inscribieron dos y nadie egresó
+        // Assert: en TUDAI 2020 se inscribieron dos y nadie egresó
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[1].anio").value(2020))
                 .andExpect(jsonPath("$[1].inscriptos").value(2))
@@ -116,10 +116,10 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_yearWithOnlyEgresados_hasZeroInscriptos() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: en TUDAI 2024 egresó Gomez y nadie se inscribió
+        // Assert: en TUDAI 2024 egresó Gomez y nadie se inscribió
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[3].anio").value(2024))
                 .andExpect(jsonPath("$[3].inscriptos").value(0))
@@ -128,10 +128,10 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_notGraduated_doesNotAddEgresadosRow() throws Exception {
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: Alvarez y Perez no se graduaron, así que no hay ninguna fila sin año
+        // Assert: Alvarez y Perez no se graduaron, así que no hay ninguna fila sin año
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[?(@.anio == null)]").isEmpty());
@@ -139,13 +139,13 @@ class CarrerasReporteIntegrationTest {
 
     @Test
     void getReporte_withoutInscripciones_returnsEmptyList() throws Exception {
-        // Given: las carreras siguen existiendo, pero nadie está inscripto
+        // Arrange: las carreras siguen existiendo, pero nadie está inscripto
         estudianteCarreraRepository.deleteAll();
 
-        // When
+        // Act
         mockMvc.perform(get("/carreras/reporte"))
 
-        // Then: 200 con lista vacía
+        // Assert: 200 con lista vacía
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }

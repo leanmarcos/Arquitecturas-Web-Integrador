@@ -31,7 +31,7 @@ class EstudiantesIntegrationTest {
     private EstudianteRepository repository;
 
     /**
-     * Given de todos los tests: se guardan en un orden que no coincide con el de apellido, DNI ni LU, así cada test
+     * Arrange de todos los tests: se guardan en un orden que no coincide con el de apellido, DNI ni LU, así cada test
      * solo pasa si el endpoint ordena por el criterio que se pide. El {@code @Transactional} los borra al terminar.
      */
     @BeforeEach
@@ -48,10 +48,10 @@ class EstudiantesIntegrationTest {
 
     @Test
     void listAll_withoutSort_getAllOrderByLastName() throws Exception {
-        // When: el request, como lo haría Postman
+        // Act: el request, como lo haría Postman
         mockMvc.perform(get("/estudiantes"))
 
-        // Then: status y contenido del JSON
+        // Assert: status y contenido del JSON
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[0].apellido").value("Alvarez"))
@@ -66,10 +66,10 @@ class EstudiantesIntegrationTest {
 
     @Test
     void listAll_sortByDni_getAllOrderByDni() throws Exception {
-        // When: se pide otro criterio con el query param sort (ascendente por defecto)
+        // Act: se pide otro criterio con el query param sort (ascendente por defecto)
         mockMvc.perform(get("/estudiantes").param("sort", "dni"))
 
-        // Then: el orden por DNI difiere del de apellido (Perez queda antes que Gomez)
+        // Assert: el orden por DNI difiere del de apellido (Perez queda antes que Gomez)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(4))
                 .andExpect(jsonPath("$[0].dni").value(33865264))
@@ -82,10 +82,10 @@ class EstudiantesIntegrationTest {
 
     @Test
     void listAll_invalidSort_returnsBadRequest() throws Exception {
-        // When: se pide ordenar por un campo que Estudiante no tiene
+        // Act: se pide ordenar por un campo que Estudiante no tiene
         mockMvc.perform(get("/estudiantes").param("sort", "invalid"))
 
-        // Then: 400 indicando el campo, no un 500
+        // Assert: 400 indicando el campo, no un 500
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("invalid_parameter"))
                 .andExpect(jsonPath("$.message").value("No existe el campo 'invalid' para ordenar"));
@@ -93,10 +93,10 @@ class EstudiantesIntegrationTest {
 
     @Test
     void findByLu_existingLu_returnsEstudiante() throws Exception {
-        // When: se pide un estudiante cargado en el Given
+        // Act: se pide un estudiante cargado en el Arrange
         mockMvc.perform(get("/estudiantes/{lu}", 20311L))
 
-        // Then: devuelve ese estudiante y no otro
+        // Assert: devuelve ese estudiante y no otro
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lu").value(20311))
                 .andExpect(jsonPath("$.dni").value(40123456))
@@ -108,10 +108,10 @@ class EstudiantesIntegrationTest {
 
     @Test
     void findByLu_nonExistingLu_returnsNotFound() throws Exception {
-        // When: se pide una LU que no está en la base
+        // Act: se pide una LU que no está en la base
         mockMvc.perform(get("/estudiantes/{lu}", 99999L))
 
-        // Then: 404 con el ErrorDto que arma el GlobalExceptionHandler
+        // Assert: 404 con el ErrorDto que arma el GlobalExceptionHandler
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("student_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró el estudiante con LU 99999"))
@@ -120,7 +120,7 @@ class EstudiantesIntegrationTest {
 
     @Test
     void create_validRequest_returnsCreatedAndPersists() throws Exception {
-        // When: el género se manda en español, como lo cargaría un usuario
+        // Act: el género se manda en español, como lo cargaría un usuario
         mockMvc.perform(post("/estudiantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -135,14 +135,14 @@ class EstudiantesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 201 con el estudiante creado
+        // Assert: 201 con el estudiante creado
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.lu").value(70001))
                 .andExpect(jsonPath("$.dni").value(45678901))
                 .andExpect(jsonPath("$.apellido").value("Rios"))
                 .andExpect(jsonPath("$.genero").value("Femenino"));
 
-        // Then: quedó guardado y se puede recuperar por su LU
+        // Assert: quedó guardado y se puede recuperar por su LU
         mockMvc.perform(get("/estudiantes/{lu}", 70001L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nombres").value("Valentina"));
@@ -150,7 +150,7 @@ class EstudiantesIntegrationTest {
 
     @Test
     void create_duplicatedDni_returnsConflict() throws Exception {
-        // When: el DNI ya es de Lucía Alvarez, aunque la LU es nueva
+        // Act: el DNI ya es de Lucía Alvarez, aunque la LU es nueva
         mockMvc.perform(post("/estudiantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -165,7 +165,7 @@ class EstudiantesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 409 y no se agrega nadie
+        // Assert: 409 y no se agrega nadie
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").value("student_document_duplicated"))
                 .andExpect(jsonPath("$.message").value("Ya existe un estudiante con DNI 33865264"));
@@ -176,7 +176,7 @@ class EstudiantesIntegrationTest {
 
     @Test
     void create_invalidGenero_returnsBadRequest() throws Exception {
-        // When: un género que no está en el enum
+        // Act: un género que no está en el enum
         mockMvc.perform(post("/estudiantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -191,7 +191,7 @@ class EstudiantesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 400 con el mensaje que tira el constructor del DTO
+        // Assert: 400 con el mensaje que tira el constructor del DTO
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("validation_error"))
                 .andExpect(jsonPath("$.message").value("Género inválido: XYZ"));
@@ -199,7 +199,7 @@ class EstudiantesIntegrationTest {
 
     @Test
     void create_withoutApellido_returnsBadRequest() throws Exception {
-        // When: falta un campo obligatorio
+        // Act: falta un campo obligatorio
         mockMvc.perform(post("/estudiantes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -213,7 +213,7 @@ class EstudiantesIntegrationTest {
                                 }
                                 """))
 
-        // Then: 400 indicando qué campo está mal
+        // Assert: 400 indicando qué campo está mal
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("validation_error"))
                 .andExpect(jsonPath("$.message").value("El apellido no puede estar vacío."));
