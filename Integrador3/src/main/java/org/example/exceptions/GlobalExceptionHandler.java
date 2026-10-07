@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.ErrorDto;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -81,6 +82,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> handleTypeMismatch(MethodArgumentTypeMismatchException ex){
         ExceptionCode code = ExceptionCode.INVALID_PARAMETER;
         String message = String.format("Valor inválido '%s' para el parámetro '%s'", ex.getValue(), ex.getName());
+        return ResponseEntity.status(code.getStatus()).body(code.toErrorDto(message));
+    }
+
+    /**
+     * Se pidió ordenar por un campo que la entidad no tiene, por ejemplo /estudiantes?sort=invalid.
+     *
+     * @return 400 con el campo que no existe
+     */
+    @ExceptionHandler(PropertyReferenceException.class)
+    public ResponseEntity<ErrorDto> handleInvalidSort(PropertyReferenceException ex){
+        ExceptionCode code = ExceptionCode.INVALID_PARAMETER;
+        String message = String.format("No existe el campo '%s' para ordenar", ex.getPropertyName());
         return ResponseEntity.status(code.getStatus()).body(code.toErrorDto(message));
     }
 
