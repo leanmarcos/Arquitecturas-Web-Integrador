@@ -140,7 +140,7 @@ class EstudiantesIntegrationTest {
                 .andExpect(jsonPath("$.lu").value(70001))
                 .andExpect(jsonPath("$.dni").value(45678901))
                 .andExpect(jsonPath("$.apellido").value("Rios"))
-                .andExpect(jsonPath("$.genero").value("FEMALE"));
+                .andExpect(jsonPath("$.genero").value("Femenino"));
 
         // Then: quedó guardado y se puede recuperar por su LU
         mockMvc.perform(get("/estudiantes/{lu}", 70001L))
