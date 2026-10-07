@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Year;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -127,6 +129,115 @@ class InscripcionesIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("invalid_parameter"))
                 .andExpect(jsonPath("$.message").value("Falta el parámetro obligatorio 'ciudad'"));
+    }
+
+    @Test
+    void matricular_validRequest_returnsCreatedAndPersists() throws Exception {
+        // When: Gomez (Tandil, TUDAI) se inscribe también en Abogacia, ya graduado
+        mockMvc.perform(post("/inscripciones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "dni": 38990211,
+                                  "nombreCarrera": "Abogacia",
+                                  "anioInscripcion": 2020,
+                                  "anioGraduacion": 2024
+                                }
+                                """))
+
+        // Then: 201 con la inscripción; sin antigüedad en el request, se calcula con los años
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.luEstudiante").value(48810))
+                .andExpect(jsonPath("$.nombreCarrera").value("Abogacia"))
+                .andExpect(jsonPath("$.graduado").value(true))
+                .andExpect(jsonPath("$.antiguedad").value(4));
+
+        // Then: ahora aparece entre los estudiantes de Abogacia en Tandil
+        mockMvc.perform(get("/inscripciones")
+                        .param("carrera", "Abogacia")
+                        .param("ciudad", "Tandil"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estudiantes.length()").value(1))
+                .andExpect(jsonPath("$.estudiantes[0].apellido").value("Gomez"));
+    }
+
+    @Test
+    void matricular_alreadyEnrolled_returnsConflict() throws Exception {
+        // When: Gomez ya está inscripto en TUDAI
+        mockMvc.perform(post("/inscripciones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "dni": 38990211,
+                                  "nombreCarrera": "TUDAI",
+                                  "anioInscripcion": 2023
+                                }
+                                """))
+
+        // Then: 409, no se pisa la inscripción que ya tenía
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("enrollment_duplicated"))
+                .andExpect(jsonPath("$.message")
+                        .value("El estudiante con DNI: 38990211 ya está inscripto en la carrera TUDAI"));
+    }
+
+    @Test
+    void matricular_nonExistingEstudiante_returnsNotFound() throws Exception {
+        // When
+        mockMvc.perform(post("/inscripciones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "dni": 11111111,
+                                  "nombreCarrera": "TUDAI",
+                                  "anioInscripcion": 2023
+                                }
+                                """))
+
+        // Then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("student_not_found"))
+                .andExpect(jsonPath("$.message").value("No se encontró el estudiante con DNI 11111111"));
+    }
+
+    @Test
+    void matricular_nonExistingCarrera_returnsNotFound() throws Exception {
+        // When
+        mockMvc.perform(post("/inscripciones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "dni": 38990211,
+                                  "nombreCarrera": "Medicina",
+                                  "anioInscripcion": 2023
+                                }
+                                """))
+
+        // Then
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("major_not_found"))
+                .andExpect(jsonPath("$.message").value("No se encontró la carrera con nombre Medicina"));
+    }
+
+    @Test
+    void matricular_graduacionBeforeInscripcion_returnsBadRequest() throws Exception {
+        // When: se gradúa antes de inscribirse
+        mockMvc.perform(post("/inscripciones")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "dni": 38990211,
+                                  "nombreCarrera": "Abogacia",
+                                  "anioInscripcion": 2024,
+                                  "anioGraduacion": 2020
+                                }
+                                """))
+
+        // Then: 400 con el campo que falló en el detail
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("validation_error"))
+                .andExpect(jsonPath("$.detail.graduacionValida")
+                        .value("El año de graduación no puede ser anterior al de inscripción"));
     }
 
     private void inscribir(Estudiante estudiante, Carrera carrera) {
