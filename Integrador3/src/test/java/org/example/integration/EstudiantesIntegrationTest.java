@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -103,6 +105,107 @@ class EstudiantesIntegrationTest {
                 .andExpect(jsonPath("$.error").value("student_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró el estudiante con LU 99999"))
                 .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    void create_validRequest_returnsCreatedAndPersists() throws Exception {
+        // When: el género se manda en español, como lo cargaría un usuario
+        mockMvc.perform(post("/estudiantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "lu": 70001,
+                                  "dni": 45678901,
+                                  "nombres": "Valentina",
+                                  "apellido": "Rios",
+                                  "edad": 20,
+                                  "genero": "Femenino",
+                                  "ciudadResidencia": "Azul"
+                                }
+                                """))
+
+        // Then: 201 con el estudiante creado
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.lu").value(70001))
+                .andExpect(jsonPath("$.dni").value(45678901))
+                .andExpect(jsonPath("$.apellido").value("Rios"))
+                .andExpect(jsonPath("$.genero").value("FEMALE"));
+
+        // Then: quedó guardado y se puede recuperar por su LU
+        mockMvc.perform(get("/estudiantes/{lu}", 70001L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombres").value("Valentina"));
+    }
+
+    @Test
+    void create_duplicatedDni_returnsConflict() throws Exception {
+        // When: el DNI ya es de Lucía Alvarez, aunque la LU es nueva
+        mockMvc.perform(post("/estudiantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "lu": 70001,
+                                  "dni": 33865264,
+                                  "nombres": "Valentina",
+                                  "apellido": "Rios",
+                                  "edad": 20,
+                                  "genero": "Female",
+                                  "ciudadResidencia": "Azul"
+                                }
+                                """))
+
+        // Then: 409 y no se agrega nadie
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("student_document_duplicated"))
+                .andExpect(jsonPath("$.message").value("Ya existe un estudiante con DNI 33865264"));
+
+        mockMvc.perform(get("/estudiantes"))
+                .andExpect(jsonPath("$.length()").value(4));
+    }
+
+    @Test
+    void create_invalidGenero_returnsBadRequest() throws Exception {
+        // When: un género que no está en el enum
+        mockMvc.perform(post("/estudiantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "lu": 70001,
+                                  "dni": 45678901,
+                                  "nombres": "Valentina",
+                                  "apellido": "Rios",
+                                  "edad": 20,
+                                  "genero": "XYZ",
+                                  "ciudadResidencia": "Azul"
+                                }
+                                """))
+
+        // Then: 400 con el mensaje que tira el constructor del DTO
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("validation_error"))
+                .andExpect(jsonPath("$.message").value("Género inválido: XYZ"));
+    }
+
+    @Test
+    void create_withoutApellido_returnsBadRequest() throws Exception {
+        // When: falta un campo obligatorio
+        mockMvc.perform(post("/estudiantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "lu": 70001,
+                                  "dni": 45678901,
+                                  "nombres": "Valentina",
+                                  "edad": 20,
+                                  "genero": "Female",
+                                  "ciudadResidencia": "Azul"
+                                }
+                                """))
+
+        // Then: 400 indicando qué campo está mal
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("validation_error"))
+                .andExpect(jsonPath("$.message").value("El apellido no puede estar vacío."));
     }
 
     private Estudiante createEstudiante(Long lu, Integer dni, String nombres, String apellido, Integer edad,
