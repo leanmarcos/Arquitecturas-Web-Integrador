@@ -17,7 +17,7 @@ public class EstudianteMapper {
                 .nombres(estudiante.getNombres())
                 .apellido(estudiante.getApellido())
                 .edad(estudiante.getEdad())
-                .genero(estudiante.getGenero())
+                .genero(estudiante.getGenero().getNombre())
                 .ciudadResidencia(estudiante.getCiudadResidencia())
                 .build();
     }
