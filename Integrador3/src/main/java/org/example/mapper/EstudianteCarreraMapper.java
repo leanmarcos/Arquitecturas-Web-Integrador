@@ -37,14 +37,13 @@ public class EstudianteCarreraMapper {
                 .carrera(carrera)
                 .anioInscripcion(request.anioInscripcion())
                 .anioGraduacion(request.anioGraduacion())
-                .antiguedad(request.antiguedad())
                 .build();
     }
 
     /**
      * Convierte una fila de {@code estudianteCarrera.csv} en un request. {@code id_estudiante} es el DNI del
      * estudiante; {@code id_carrera} es el id de {@code carreras.csv}, no el de la base, por eso se traduce a nombre con
-     * {@code nombresCarreraPorIdCsv}. La {@code antiguedad} se carga tal como viene en el CSV.
+     * {@code nombresCarreraPorIdCsv}. La {@code antiguedad} del CSV se ignora: se calcula a partir de los años.
      *
      * @param nombresCarreraPorIdCsv nombre de cada carrera según su id en {@code carreras.csv}
      */
@@ -57,7 +56,6 @@ public class EstudianteCarreraMapper {
                 .nombreCarrera(nombresCarreraPorIdCsv.get(idCarreraCsv))
                 .anioInscripcion(Year.parse(row.get("inscripcion").trim()))
                 .anioGraduacion(graduacion == SIN_GRADUACION ? null : Year.of(graduacion))
-                .antiguedad(Integer.parseInt(row.get("antiguedad").trim()))
                 .build();
     }
 

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Builder;
 import org.example.model.EstudianteCarrera;
 
@@ -14,7 +13,6 @@ import java.time.Year;
  * {@link EstudianteCarrera}
  *
  * @param anioGraduacion {@code null} si el estudiante no se graduó
- * @param antiguedad     {@code null} para que se calcule a partir de los años
  */
 @Builder
 public record EstudianteCarreraRequestDTO(
@@ -28,10 +26,7 @@ public record EstudianteCarreraRequestDTO(
         @NotNull(message = "El año de inscripción es obligatorio")
         Year anioInscripcion,
 
-        Year anioGraduacion,
-
-        @PositiveOrZero(message = "La antigüedad no puede ser negativa")
-        Integer antiguedad) {
+        Year anioGraduacion) {
 
     @AssertTrue(message = "El año de graduación no puede ser anterior al de inscripción")
     public boolean isGraduacionValida() {
