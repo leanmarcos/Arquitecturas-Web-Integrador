@@ -81,6 +81,17 @@ class EstudiantesIntegrationTest {
     }
 
     @Test
+    void listAll_invalidSort_returnsBadRequest() throws Exception {
+        // When: se pide ordenar por un campo que Estudiante no tiene
+        mockMvc.perform(get("/estudiantes").param("sort", "invalid"))
+
+        // Then: 400 indicando el campo, no un 500
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid_parameter"))
+                .andExpect(jsonPath("$.message").value("No existe el campo 'invalid' para ordenar"));
+    }
+
+    @Test
     void findByLu_existingLu_returnsEstudiante() throws Exception {
         // When: se pide un estudiante cargado en el Given
         mockMvc.perform(get("/estudiantes/{lu}", 20311L))
