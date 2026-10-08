@@ -22,6 +22,9 @@ public enum ExceptionCode {
     // Inscripción
     ENROLLMENT_DUPLICATED(HttpStatus.CONFLICT),
 
+    // Genero
+    GENERO_NOT_FOUND(HttpStatus.NOT_FOUND),
+
     // Generales
     VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST),
