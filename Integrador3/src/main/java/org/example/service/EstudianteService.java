@@ -5,12 +5,15 @@ import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.DocumentException;
 import org.example.exceptions.EstudianteNotFoundException;
+import org.example.exceptions.GeneroNotFoundException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
+import org.example.model.EstudianteGenero;
 import org.example.repository.EstudianteRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,8 +31,7 @@ public class EstudianteService {
         return mapper.toDto(repository.save(e));
     }
 
-    // Devuelve la entidad, no el DTO: es de paquete para que solo la usen otros services (ej: EstudianteCarreraService)
-    Estudiante findEntityByDni(Integer dni){
+    public Estudiante findEntityByDni(Integer dni){
         return repository.findByDni(dni)
                 .orElseThrow(() -> new EstudianteNotFoundException(dni));
     }
@@ -38,6 +40,19 @@ public class EstudianteService {
         return repository.findAll(sort).stream()
                 .map(mapper::toDto)
                 .toList();
+    }
+
+    public List<EstudianteResponseDTO> searchByGenero(String genero){
+        List<EstudianteResponseDTO> encontrados = new ArrayList<>();
+
+        EstudianteGenero estudianteGenero = EstudianteGenero.from(genero).
+                orElseThrow(() -> new GeneroNotFoundException(genero));
+
+      return this.repository.findByGenero(genero)
+              .stream()
+              .map(mapper::toDto)
+              .toList();
+
     }
 
     public EstudianteResponseDTO findEstudianteByLu(Long lu) {
