@@ -31,7 +31,7 @@ public class EstudianteService {
         return mapper.toDto(repository.save(e));
     }
 
-    public Estudiante findEntityByDni(Integer dni){
+    Estudiante findEntityByDni(Integer dni){
         return repository.findByDni(dni)
                 .orElseThrow(() -> new EstudianteNotFoundException(dni));
     }
@@ -43,12 +43,10 @@ public class EstudianteService {
     }
 
     public List<EstudianteResponseDTO> searchByGenero(String genero){
-        List<EstudianteResponseDTO> encontrados = new ArrayList<>();
-
         EstudianteGenero estudianteGenero = EstudianteGenero.from(genero).
                 orElseThrow(() -> new GeneroNotFoundException(genero));
 
-      return this.repository.findByGenero(genero)
+      return this.repository.findByGenero(estudianteGenero)
               .stream()
               .map(mapper::toDto)
               .toList();
