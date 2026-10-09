@@ -1,6 +1,7 @@
 package org.example.repository;
 
 import org.example.model.Estudiante;
+import org.example.model.EstudianteGenero;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
 
     Optional<Estudiante> findByDni(Integer dni);
 
-    List<Estudiante> findByGenero(String genero);
+    List<Estudiante> findByGenero(EstudianteGenero genero);
 
     Optional<Estudiante> findByLu(Long lu);
 }
