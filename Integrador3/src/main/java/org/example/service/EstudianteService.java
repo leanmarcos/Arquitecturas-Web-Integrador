@@ -6,6 +6,7 @@ import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.DocumentException;
 import org.example.exceptions.EstudianteNotFoundException;
 import org.example.exceptions.GeneroNotFoundException;
+import org.example.exceptions.InvalidParameterException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
@@ -44,7 +45,7 @@ public class EstudianteService {
 
     public List<EstudianteResponseDTO> searchByGenero(String genero){
         EstudianteGenero estudianteGenero = EstudianteGenero.from(genero).
-                orElseThrow(() -> new GeneroNotFoundException(genero));
+                orElseThrow(() -> new InvalidParameterException("genero", genero));
 
       return this.repository.findByGenero(estudianteGenero)
               .stream()
