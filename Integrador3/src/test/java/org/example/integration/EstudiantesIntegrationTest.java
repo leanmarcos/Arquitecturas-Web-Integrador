@@ -13,6 +13,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,12 +40,12 @@ class EstudiantesIntegrationTest {
     void cargarEstudiantes() {
         repository.save(createEstudiante(34978L, 71779527, "Isidro", "Zapata", 22,
                 EstudianteGenero.MALE, "Tandil"));
-        repository.save(createEstudiante(51244L, 33865264, "Lucía", "Alvarez", 19,
+        repository.save(createEstudiante(51244L, 33865264, "Lucia", "Alvarez", 19,
                 EstudianteGenero.FEMALE, "Rauch"));
-        repository.save(createEstudiante(20311L, 40123456, "Martín", "Gomez", 25,
+        repository.save(createEstudiante(20311L, 40123456, "Martin", "Gomez", 25,
                 EstudianteGenero.MALE, "Azul"));
-        repository.save(createEstudiante(48810L, 38990211, "Sofía", "Perez", 21,
-                EstudianteGenero.NON_BINARY, "Olavarría"));
+        repository.save(createEstudiante(48810L, 38990211, "Sofia", "Perez", 21,
+                EstudianteGenero.NON_BINARY, "Olavarria"));
     }
 
     @Test
@@ -60,7 +62,7 @@ class EstudiantesIntegrationTest {
                 .andExpect(jsonPath("$[3].apellido").value("Zapata"))
                 .andExpect(jsonPath("$[0].lu").value(51244))
                 .andExpect(jsonPath("$[0].dni").value(33865264))
-                .andExpect(jsonPath("$[0].nombres").value("Lucía"))
+                .andExpect(jsonPath("$[0].nombres").value("Lucia"))
                 .andExpect(jsonPath("$[0].ciudadResidencia").value("Rauch"));
     }
 
@@ -100,7 +102,7 @@ class EstudiantesIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.lu").value(20311))
                 .andExpect(jsonPath("$.dni").value(40123456))
-                .andExpect(jsonPath("$.nombres").value("Martín"))
+                .andExpect(jsonPath("$.nombres").value("Martin"))
                 .andExpect(jsonPath("$.apellido").value("Gomez"))
                 .andExpect(jsonPath("$.edad").value(25))
                 .andExpect(jsonPath("$.ciudadResidencia").value("Azul"));
@@ -116,6 +118,65 @@ class EstudiantesIntegrationTest {
                 .andExpect(jsonPath("$.error").value("student_not_found"))
                 .andExpect(jsonPath("$.message").value("No se encontró el estudiante con LU 99999"))
                 .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    void searchByGenero_existingGenero_returnsOnlyThatGenero() throws Exception {
+        // Act: el género en español, como se muestra en la respuesta
+        mockMvc.perform(get("/estudiantes").param("genero", "Masculino"))
+
+        // Assert: solo los dos varones del Arrange, ordenados por apellido como el listado sin filtro
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].apellido").value("Gomez"))
+                .andExpect(jsonPath("$[1].apellido").value("Zapata"))
+                .andExpect(jsonPath("$[*].genero", everyItem(is("Masculino"))));
+    }
+
+    @Test
+    void searchByGenero_englishLowercase_returnsEstudiantes() throws Exception {
+        // Act: el nombre en inglés del CSV y en minúsculas
+        mockMvc.perform(get("/estudiantes").param("genero", "female"))
+
+        // Assert: encuentra a Lucía igual que si se pidiera "Femenino"
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].nombres").value("Lucia"))
+                .andExpect(jsonPath("$[0].apellido").value("Alvarez"))
+                .andExpect(jsonPath("$[0].genero").value("Femenino"));
+    }
+
+    @Test
+    void searchByGenero_generoWithSpaces_returnsEstudiantes() throws Exception {
+        // Act: un género de dos palabras, que viaja en la URL como "No%20binario"
+        mockMvc.perform(get("/estudiantes").param("genero", "No binario"))
+
+        // Assert: encuentra a Sofía
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].nombres").value("Sofia"))
+                .andExpect(jsonPath("$[0].apellido").value("Perez"));
+    }
+
+    @Test
+    void searchByGenero_generoWithoutEstudiantes_returnsEmptyList() throws Exception {
+        // Act: un género válido que ningún estudiante del Arrange tiene
+        mockMvc.perform(get("/estudiantes").param("genero", "Agénero"))
+
+        // Assert: 200 con lista vacía, no un 404
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void searchByGenero_invalidGenero_returnsBadRequest() throws Exception {
+        // Act: un género que no está en el enum
+        mockMvc.perform(get("/estudiantes").param("genero", "XYZ"))
+
+        // Assert: 400 indicando el valor y el parámetro
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid_parameter"))
+                .andExpect(jsonPath("$.message").value("Valor inválido 'XYZ' para el parámetro 'genero'"));
     }
 
     @Test
