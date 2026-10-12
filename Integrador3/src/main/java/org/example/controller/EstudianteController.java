@@ -29,9 +29,10 @@ public class EstudianteController {
 
     @GetMapping
     public ResponseEntity<List<EstudianteResponseDTO>> search(
+            @RequestParam(required = false) String genero,
             @SortDefault(sort = "apellido", direction = Sort.Direction.ASC) Sort sort
     ){
-        return ResponseEntity.ok(estudianteService.searchEstudiantes(sort));
+        return ResponseEntity.ok(estudianteService.searchEstudiantes(genero, sort));
     }
 
     @GetMapping("/{lu}")
@@ -39,10 +40,5 @@ public class EstudianteController {
             @PathVariable Long lu
     ){
         return ResponseEntity.ok(estudianteService.findEstudianteByLu(lu));
-    }
-
-    @GetMapping("/estudiante/{genero}")
-    public ResponseEntity<List<EstudianteResponseDTO>> searchByGenero(@PathVariable String genero){
-        return ResponseEntity.ok(this.estudianteService.searchByGenero(genero));
     }
 }
