@@ -236,6 +236,33 @@ class EstudiantesIntegrationTest {
     }
 
     @Test
+    void create_duplicatedLu_returnsConflict() throws Exception {
+        // Act: la LU ya es de Martín Gomez, aunque el DNI es nuevo
+        mockMvc.perform(post("/estudiantes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "lu": 20311,
+                                  "dni": 45678901,
+                                  "nombres": "Valentina",
+                                  "apellido": "Rios",
+                                  "edad": 20,
+                                  "genero": "Female",
+                                  "ciudadResidencia": "Azul"
+                                }
+                                """))
+
+        // Assert: 409 y no se pisan los datos del estudiante que ya tenía esa LU
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("student_number_duplicated"))
+                .andExpect(jsonPath("$.message").value("Ya existe un estudiante con LU 20311"));
+
+        mockMvc.perform(get("/estudiantes/{lu}", 20311L))
+                .andExpect(jsonPath("$.apellido").value("Gomez"))
+                .andExpect(jsonPath("$.dni").value(40123456));
+    }
+
+    @Test
     void create_invalidGenero_returnsBadRequest() throws Exception {
         // Act: un género que no está en el enum
         mockMvc.perform(post("/estudiantes")
