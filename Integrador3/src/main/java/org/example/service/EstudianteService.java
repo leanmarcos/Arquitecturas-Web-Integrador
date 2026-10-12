@@ -3,7 +3,7 @@ package org.example.service;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
-import org.example.exceptions.DocumentException;
+import org.example.exceptions.EstudianteExistingException;
 import org.example.exceptions.EstudianteNotFoundException;
 import org.example.exceptions.InvalidParameterException;
 import org.example.mapper.EstudianteMapper;
@@ -24,7 +24,7 @@ public class EstudianteService {
 
     public EstudianteResponseDTO createEstudiante(EstudianteRequestDTO request){
         if (repository.existsByDni(request.dni())) {
-            throw new DocumentException(request.dni());
+            throw new EstudianteExistingException(request.dni());
         }
         Estudiante e = mapper.toEntity(request);
         return mapper.toDto(repository.save(e));
