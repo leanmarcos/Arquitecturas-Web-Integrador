@@ -23,6 +23,9 @@ public class EstudianteService {
     private final EstudianteMapper mapper;
 
     public EstudianteResponseDTO createEstudiante(EstudianteRequestDTO request){
+        if (repository.existsById(request.lu())) {
+            throw new EstudianteExistingException(request.lu());
+        }
         if (repository.existsByDni(request.dni())) {
             throw new EstudianteExistingException(request.dni());
         }
