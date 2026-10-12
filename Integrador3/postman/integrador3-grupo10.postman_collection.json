@@ -1949,7 +1949,45 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "TUDAI en Rauch",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/inscripciones?carrera=TUDAI&ciudad=Rauch",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "inscripciones"
+                  ],
+                  "query": [
+                    {
+                      "key": "carrera",
+                      "value": "TUDAI"
+                    },
+                    {
+                      "key": "ciudad",
+                      "value": "Rauch"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"carrera\": \"TUDAI\",\n    \"ciudad\": \"Rauch\",\n    \"estudiantes\": [\n        {\n            \"lu\": 250019,\n            \"dni\": 32362231,\n            \"nombres\": \"Nicolas\",\n            \"apellido\": \"Carsaniga\",\n            \"edad\": 30,\n            \"genero\": \"Masculino\",\n            \"ciudadResidencia\": \"Rauch\"\n        },\n        {\n            \"lu\": 250020,\n            \"dni\": 24914542,\n            \"nombres\": \"Elva\",\n            \"apellido\": \"Kehler\",\n            \"edad\": 45,\n            \"genero\": \"Femenino\",\n            \"ciudadResidencia\": \"Rauch\"\n        },\n        {\n            \"lu\": 250021,\n            \"dni\": 30111285,\n            \"nombres\": \"Hector\",\n            \"apellido\": \"Liceaga\",\n            \"edad\": 32,\n            \"genero\": \"Masculino\",\n            \"ciudadResidencia\": \"Rauch\"\n        },\n        {\n            \"lu\": 250018,\n            \"dni\": 23322529,\n            \"nombres\": \"Sergio\",\n            \"apellido\": \"Yañez\",\n            \"edad\": 48,\n            \"genero\": \"Masculino\",\n            \"ciudadResidencia\": \"Rauch\"\n        }\n    ]\n}"
+            }
+          ]
         },
         {
           "name": "Carrera inexistente (404)",
