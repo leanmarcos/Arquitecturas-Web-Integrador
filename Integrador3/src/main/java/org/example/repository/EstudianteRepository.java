@@ -2,6 +2,7 @@ package org.example.repository;
 
 import org.example.model.Estudiante;
 import org.example.model.EstudianteGenero;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
 
     Optional<Estudiante> findByDni(Integer dni);
 
-    List<Estudiante> findByGenero(EstudianteGenero genero);
+    List<Estudiante> findByGenero(EstudianteGenero genero, Sort sort);
 
     Optional<Estudiante> findByLu(Long lu);
 }
