@@ -5,7 +5,6 @@ import org.example.dto.EstudianteRequestDTO;
 import org.example.dto.EstudianteResponseDTO;
 import org.example.exceptions.DocumentException;
 import org.example.exceptions.EstudianteNotFoundException;
-import org.example.exceptions.GeneroNotFoundException;
 import org.example.exceptions.InvalidParameterException;
 import org.example.mapper.EstudianteMapper;
 import org.example.model.Estudiante;
@@ -14,7 +13,6 @@ import org.example.repository.EstudianteRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
